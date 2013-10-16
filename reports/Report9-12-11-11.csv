@@ -1,0 +1,4 @@
+area,sump_number,sump_ID,program_zone,location_LSD,start_date,end_date,total_licensed_volume
+Kearl,1,SUMP 1 LAYD 1,K03,9-19-096-07-W4,0000-00-00,0000-00-00,0
+Kearl,2,SUMP 2 COM T,K01,12-11-097-07-W,0000-00-00,0000-00-00,3000
+Kearl,3,SUMP 3 LAYD 5,K03,2-05-097-07-W4,0000-00-00,0000-00-00,3000

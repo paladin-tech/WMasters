@@ -1,0 +1,4 @@
+area,sump_number,sump_ID,program_zone,location_LSD,start_date,end_date,total_licensed_volume
+Syncrude,1,SS-1,Syncrude tailings,,0000-00-00,0000-00-00,3000
+Kearl,1,KS-1,TOWER SUMP,LSD-13 Sec-11 Twp-097 Rge-07 Mer-4,0000-00-00,0000-00-00,5000
+Kearl,2,KS-2,CEMENT SUMP,01 Sec-30 Tw p-096 Rge-07 Mer-4,0000-00-00,0000-00-00,1000
