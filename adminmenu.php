@@ -12,5 +12,9 @@
       <td style="vertical-align: top; text-align: center;"><a href="CompanyAccess.php" target="_top">Define access rights</a></td>
       <td style="vertical-align: top; text-align: center;">Select this to define company access rights<br></td>
     </tr>
+    <tr>
+	    <td style="vertical-align: top; text-align: center;"><a href="Wells.php" target="_top">Wells Administration</a></td>
+	    <td style="vertical-align: top; text-align: center;">Select this to update data on existing wells or add a new one<br></td>
+    </tr>
   </tbody>
 </table>

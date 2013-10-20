@@ -13,21 +13,9 @@ include("xajax_f.php");
 // Gathering data for combo's
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");
 
-if(isset($_POST['submit'])) {
-	foreach($_POST['selMudProduct'] as $key => $value) {
-		$mudProduct0 = $_POST['hidProductID'][$key];
-		$mudProduct1 = $_POST['selMudProduct'][$key];
-		$mudProduct2 = ($_POST['txtQuantity'][$key] == "") ? 0 : $_POST['txtQuantity'][$key];
-		$well_id = $_POST['well_id'];
-		if($mudProduct0 == "" && $mudProduct1 != "") $infosystem->Execute("INSERT INTO `mud_products` SET `well_id` = '{$well_id}', `mud_product` = '{$mudProduct1}', `quantity` = {$mudProduct2}");
-		if($mudProduct0 != "" && $mudProduct1 != "") $infosystem->Execute("UPDATE `mud_products` SET `mud_product` = '{$mudProduct1}', `quantity` = {$mudProduct2} WHERE `mud_product_id` = {$mudProduct0}");
-	}
-}
-
 // If a Well is chosen, get the data for the form
 if(isset($_GET['wellId'])) {
 	$wellId = $_GET['wellId'];
-	list($spud, $rr, $logged) = $infosystem->Execute("SELECT `spud`, `rr`, `logged` FROM `wells_construction` WHERE `well_id` = '{$wellId}'")->fields;
 	$rsMudProduct = $infosystem->Execute("SELECT `mud_product_id`, `mud_product`, `quantity` FROM `mud_products` WHERE `well_id` = '{$wellId}'");
 }
 ?>
@@ -93,63 +81,16 @@ if(isset($_GET['wellId'])) {
 					list($mud_product_id, $mud_product, $quantity) = $rsMudProduct->fields;
 				?>
 				<tr>
-					<input type="hidden" name="hidProductID[]" value="<?= (isset($wellId)) ? $mud_product_id : "" ?>">
-					<td>
-						<select name="selMudProduct[]">
-							<option value="">[select a Mud Product]</option>
-							<option value="Prod1"<?= (isset($wellId) && $mud_product == "Prod1") ? " selected" : "" ?>>Prod1</option>
-							<option value="Prod2"<?= (isset($wellId) && $mud_product == "Prod2") ? " selected" : "" ?>>Prod2</option>
-						</select>
-					</td>
-					<td><input type="text" name="txtQuantity[]" value="<?= (isset($wellId)) ? $quantity : "" ?>"></td>
+					<td><?= $mud_product ?></td>
+					<td><?= $quantity ?></td>
 				</tr><?
 					$rsMudProduct->MoveNext();
 				}
 				}
 				?>
-				<tr>
-					<input type="hidden" name="hidProductID[]" value="">
-					<td>
-						<select name="selMudProduct[]">
-							<option value="">[select a Mud Product]</option>
-							<option value="Prod1">Prod1</option>
-							<option value="Prod2">Prod2</option>
-						</select>
-					</td>
-					<td><input type="text" name="txtQuantity[]" value=""></td>
-				</tr>
-			</table>
-		</td>
-		<td>
-			<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC" width="100%">
-				<tr>
-					<td>Spud</td>
-					<td><input type="text" name="txtSpud" value="<?= $spud ?>"></td>
-				</tr>
-				<tr>
-					<td>RR</td>
-					<td><input type="text" name="txtRR" value="<?= $rr ?>"></td>
-				</tr>
-				<tr>
-					<td>Logged</td>
-					<td><input type="text" name="txtLogged" value="<?= $logged ?>"></td>
-				</tr>
-				<tr>
-					<td>Cemented</td>
-					<td><input type="text" name="txtCemented" value=""></td>
-				</tr>
 			</table>
 		</td>
 		<td width="100%">&nbsp;</td>
-	</tr>
-	<tr>
-		<td colspan="3">
-			<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC" width="100%">
-				<tr>
-					<td><input type="submit" name="submit" value="Submit"<?= (isset($wellId)) ? "" : "disabled=disabled" ?>></td>
-				</tr>
-			</table>
-		</td>
 	</tr>
 </table>
 </form>
