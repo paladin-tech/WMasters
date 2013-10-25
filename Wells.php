@@ -54,7 +54,7 @@ $rsWell = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER
 <form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?><?= (isset($well_id)) ? "?wellId={$well_id}" : "" ?>" method="post">
 	<input type="hidden" name="well_id" id="well_id" value="<?= (isset($well_id)) ? $well_id : ""?>">
 	<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC" width="100%">
-		<tr>
+		<tr valign="top">
 			<td>Well ID</td>
 			<td>
 				<select name="selWell" id="selWell">

@@ -66,13 +66,22 @@ $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` 
 			<?
 			}
 			?>
+
+			$('#frm').submit(function(event) {
+				$('.quantity').each(function() {
+					if(($(this).val() != '' && !($.isNumeric($(this).val()))) || $(this).val() <= 0) {
+						alert('Quantity must be a numeric value greater than zero!');
+						event.preventDefault();
+					}
+				});
+			});
 		});
 	</script>
 </head>
 
 <body>
 <? include ('header.inc');?>
-<form name="frm" action="<?=$_SERVER['PHP_SELF']?><?= (isset($truckId) && isset($dateDaily)) ? "?truckId={$truckId}&dateDaily={$dateDaily}" : "" ?>" method="post">
+<form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?><?= (isset($truckId) && isset($dateDaily)) ? "?truckId={$truckId}&dateDaily={$dateDaily}" : "" ?>" method="post">
 	<input type="hidden" name="truckId" value="<?= (isset($truckId)) ? $truckId : "" ?>">
 	<input type="hidden" name="dateDaily" value="<?= (isset($dateDaily)) ? $dateDaily : "" ?>">
 <table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
@@ -137,7 +146,7 @@ $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` 
 				} ?>
 			</select>
 		</td>
-		<td><input type="text" name="txtQuantity[]" value="<?= $quantity ?>"></td>
+		<td><input type="text" name="txtQuantity[]" value="<?= $quantity ?>" class="quantity"></td>
 		<td width="100%">&nbsp;</td>
 	</tr>
 	<?
@@ -172,7 +181,7 @@ $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` 
 				} ?>
 			</select>
 		</td>
-		<td><input type="text" name="txtQuantity[]" value=""></td>
+		<td><input type="text" name="txtQuantity[]" value="" class="quantity"></td>
 		<td width="100%">&nbsp;</td>
 	</tr>
 	<tr>

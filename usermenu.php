@@ -95,12 +95,12 @@ td {
 			<td>Input time from 00:00-23:45</td>
 		</tr><?
 		}
-		if($Vacuum!="d") { ?>
-		<tr>
-			<td><a href="Vacuum.php" target="_top">Vacuum</a></td>
-			<td>Input time from 00:00-23:45</td>
-		</tr><?
-		}
+//		if($Vacuum!="d") { ?>
+<!--		<tr>-->
+<!--			<td><a href="Vacuum.php" target="_top">Vacuum</a></td>-->
+<!--			<td>Input time from 00:00-23:45</td>-->
+<!--		</tr>--><?//
+//		}
 		if($Vacuum!="d") { ?>
 		<tr>
 			<td><a href="MudProducts.php" target="_top">Well and Mud Products</a></td>
@@ -204,8 +204,14 @@ td {
 		</tr><?
 		}
 		if($Report12!="d") { ?>
+			<tr>
+				<td><a href="Report18.php" target="_top">Report #18 - Consumables for all the wells</a></td>
+				<td>Click to submit</td>
+			</tr><?
+		}
+		if($Report12!="d") { ?>
 		<tr>
-			<td><a href="Report18.php" target="_top">Report #18 - Consumables per wells</a></td>
+			<td><a href="Report18a.php" target="_top">Report #18 - Consumables per wells</a></td>
 			<td>Click to submit</td>
 		</tr><?
 		}

@@ -12,6 +12,7 @@ include("xajax_f.php");
 
 // Gathering data for combo's
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");
+$rsMudProductList = $infosystem->Execute("SELECT `mud_product_id`, `mud_product` FROM `mud_product_list`");
 
 if(isset($_POST['submit'])) {
 	foreach($_POST['selMudProduct'] as $key => $value) {
@@ -43,7 +44,8 @@ if(isset($_GET['wellId'])) {
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#selWell').change(function() {
-				window.location.href = '<?= $_SERVER["PHP_SELF"] ?>?wellId='+$(this).val();
+				if($(this).val() == '') $('#submit').attr('disabled', true);
+				if($(this).val() != '') window.location.href = '<?= $_SERVER["PHP_SELF"] ?>?wellId='+$(this).val();
 			});
 
 //			$('#mudProducts > tbody > tr').not('tr:first').length;
@@ -96,9 +98,17 @@ if(isset($_GET['wellId'])) {
 					<input type="hidden" name="hidProductID[]" value="<?= (isset($wellId)) ? $mud_product_id : "" ?>">
 					<td>
 						<select name="selMudProduct[]">
-							<option value="">[select a Mud Product]</option>
-							<option value="Prod1"<?= (isset($wellId) && $mud_product == "Prod1") ? " selected" : "" ?>>Prod1</option>
-							<option value="Prod2"<?= (isset($wellId) && $mud_product == "Prod2") ? " selected" : "" ?>>Prod2</option>
+							<option value="">[Select a Mud Product]</option>
+							<?
+							$rsMudProductList->MoveFirst();
+							while(!$rsMudProductList->EOF) {
+								list($x_mud_product_id, $x_mud_product) = $rsMudProductList->fields;
+							?>
+							<option value="<?= $x_mud_product_id ?>"<?= (isset($wellId) && $mud_product == $x_mud_product_id) ? " selected" : ""?>><?= $x_mud_product ?></option>
+							<?
+								$rsMudProductList->MoveNext();
+							}
+							?>
 						</select>
 					</td>
 					<td><input type="text" name="txtQuantity[]" value="<?= (isset($wellId)) ? $quantity : "" ?>"></td>
@@ -111,9 +121,17 @@ if(isset($_GET['wellId'])) {
 					<input type="hidden" name="hidProductID[]" value="">
 					<td>
 						<select name="selMudProduct[]">
-							<option value="">[select a Mud Product]</option>
-							<option value="Prod1">Prod1</option>
-							<option value="Prod2">Prod2</option>
+							<option value="">[Select a Mud Product]</option>
+							<?
+							$rsMudProductList->MoveFirst();
+							while(!$rsMudProductList->EOF) {
+								list($x_mud_product_id, $x_mud_product) = $rsMudProductList->fields;
+								?>
+								<option value="<?= $x_mud_product_id ?>"><?= $x_mud_product ?></option>
+								<?
+								$rsMudProductList->MoveNext();
+							}
+							?>
 						</select>
 					</td>
 					<td><input type="text" name="txtQuantity[]" value=""></td>
@@ -146,7 +164,7 @@ if(isset($_GET['wellId'])) {
 		<td colspan="3">
 			<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC" width="100%">
 				<tr>
-					<td><input type="submit" name="submit" value="Submit"<?= (isset($wellId)) ? "" : "disabled=disabled" ?>></td>
+					<td><input type="submit" name="submit" id="submit" value="Submit"<?= (isset($wellId)) ? "" : "disabled=disabled" ?>></td>
 				</tr>
 			</table>
 		</td>
