@@ -17,8 +17,7 @@ while(!$rsMudProduct->EOF) {
 	$report18[$well_id][$mud_product] = $quantity;
 	$rsMudProduct->MoveNext();
 }
-var_dump($report18);
-var_dump($report18ID);
+
 $i = 1;
 while(!$rsMudProductList->EOF) {
 	list($mud_product_id, $mud_product) = $rsMudProductList->fields;
