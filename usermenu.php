@@ -115,6 +115,18 @@ td {
 		}
 		if($WellConUpdate!="d") { ?>
 		<tr>
+			<td><a href="TempLogDeck.php" target="_top">Temp Log Deck</a></td>
+			<td>Input time from 00:00-23:45</td>
+		</tr><?
+		}
+		if($WellConUpdate!="d") { ?>
+		<tr>
+			<td><a href="RigMatLocation.php" target="_top">Rig Mat Location</a></td>
+			<td>Input time from 00:00-23:45</td>
+		</tr><?
+		}
+		if($WellConUpdate!="d") { ?>
+		<tr>
 			<td><a href="WellConUpdate.php" target="_top">Main Board Data Import</a></td>
 			<td>Select csv file for upload</td>
 		</tr><?
@@ -186,6 +198,18 @@ td {
 		</tr><?
 		}
 		if($Report12!="d") { ?>
+			<tr>
+				<td><a href="Report13.php" target="_top">Report #13 - DSR</a></td>
+				<td>Click to submit</td>
+			</tr><?
+		}
+		if($Report12!="d") { ?>
+			<tr>
+				<td><a href="Report15.php" target="_top">Report #15 - DSR Report</a></td>
+				<td>Click to submit</td>
+			</tr><?
+		}
+		if($Report12!="d") { ?>
 		<tr>
 			<td><a href="Report16.php" target="_top">Report #16 - Mud Report per days</a></td>
 			<td>Click to submit</td>
@@ -214,6 +238,18 @@ td {
 			<td><a href="Report18a.php" target="_top">Report #18 - Consumables per wells</a></td>
 			<td>Click to submit</td>
 		</tr><?
+		}
+		if($Report12!="d") { ?>
+		<tr>
+			<td><a href="Report20.php" target="_top">Report #20 - Temporary Log Deck</a></td>
+			<td>Click to submit</td>
+		</tr><?
+		}
+		if($Report12!="d") { ?>
+			<tr>
+				<td><a href="Report21.php" target="_top">Report #21 - Rig Mat Location</a></td>
+				<td>Click to submit</td>
+			</tr><?
 		}
 		if($Report!="d") { ?>
 		<tr>
