@@ -16,7 +16,7 @@ $infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Report 2
 
 $rsReport = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro`");
 
-$rsConHydro = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro`");
+$rsConHydro = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro` WHERE `water_licence` != ''");
 
 $areas = array("Kearl", "Syncrude");
 $conHydroArray = array();

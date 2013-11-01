@@ -9,6 +9,7 @@ require("infosystem.php");
 $rsWells = $infosystem->Execute("SELECT `well_id`, `well_licence`, `permit`, `activity`, `location_lsd`, `letter_of_authority`, `designed_north`, `designed_east`, `start_date_of_entry`, `flagged`, `salvaged`, `mulched`, `bladed`, `ready_for_drilling`, `approved_by_drilling`, `spud`, `rr`, `logged`, `abandonment`, `reclaimed_except_vegetation`, `constructed_not_drilled`, `nill_entry_not_built`, `length_nca`, `width_nca`, `length_ea`, `width_ea`, `lease_length`, `lease_width`, `lease_salvaged`, `lease_remote_sump`, `log_conifer_1`, `log_volume_1`, `log_conifer_2`, `log_volume_2`, `gps_north_BASE`, `gps_east_BASE`, `GL_BASE`, `final_as_built_BASE`, `gps_north_AS_BUILT`, `gps_east_AS_BUILT`, `GL_AS_BUILT`, `final_as_built_AS_BUILT`, `gps_north_R1`, `gps_east_R1`, `GL_R1`, `final_as_built_R1`, `gps_north_R2`, `gps_east_R2`, `GL_R2`, `final_as_built_R2`, `gps_north_R3`, `gps_east_R3`, `GL_R3`, `final_as_built_R3`, `gps_north_R4`, `gps_east_R4`, `GL_R4`, `final_as_built_R4` FROM `wells_construction` ORDER BY `well_id`");
 
 // Data for old Report #2, now part of Report #15
+$rsConHydro = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro` WHERE `water_licence` != ''");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -21,7 +22,7 @@ $rsWells = $infosystem->Execute("SELECT `well_id`, `well_licence`, `permit`, `ac
 		table td {
 			white-space: nowrap;
 		}
-		.bold, th {
+		tr.bold td, th {
 			font-weight: bold;
 		}
 	</style>
@@ -173,6 +174,49 @@ $rsWells = $infosystem->Execute("SELECT `well_id`, `well_licence`, `permit`, `ac
 		<td class="bold"><?= number_format(($sum4 / 10000), 2) ?></td>
 		<td class="bold">ha</td>
 		<td colspan="6">&nbsp;</td>
+	</tr>
+</table>
+<br>
+<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC" width="100%">
+	<tr>
+		<th>Water Licence # (TDL)</th>
+		<th>Source ID</th>
+		<th>Description</th>
+		<th>Location LSD</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th>Total Licenced Volume (m3)</th>
+		<th>Total Used to Date (m3)</th>
+		<th width="100%">&nbsp;</th>
+	</tr>
+	<?
+	$sum1 = $sum2 = 0;
+	while(!$rsConHydro->EOF) {
+		list($area, $source_number, $water_licence, $source_ID, $program_zone, $location_LSD, $start_date, $end_date, $total_licensed_volume) = $rsConHydro->fields;
+		list($total_used_to_date) = $infosystem->Execute("SELECT SUM(loc_{$source_number}) FROM `water` WHERE `area` = '{$area}'")->fields;
+		$sum1 += $total_licensed_volume;
+		$sum2 += $total_used_to_date;
+	?>
+	<tr>
+		<td><?= $water_licence ?></td>
+		<td><?= $source_ID ?></td>
+		<td><?= $program_zone ?></td>
+		<td><?= $location_LSD ?></td>
+		<td><?= ($start_date != '0000-00-00') ? $start_date : "" ?></td>
+		<td><?= ($end_date != '0000-00-00') ? $end_date : "" ?></td>
+		<td align="right"><?= number_format($total_licensed_volume, 2) ?></td>
+		<td align="right"><?= number_format($total_used_to_date, 2) ?></td>
+		<td width="100%">&nbsp;</td>
+	</tr>
+	<?
+		$rsConHydro->MoveNext();
+	}
+	?>
+	<tr class="bold">
+		<td colspan="6" align="right">Total All Sources</td>
+		<td align="right"><?= number_format($sum1, 2) ?></td>
+		<td align="right"><?= number_format($sum2, 2) ?></td>
+		<td width="100%">&nbsp;</td>
 	</tr>
 </table>
 <? include ('footer.inc'); ?>
