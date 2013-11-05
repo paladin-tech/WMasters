@@ -1,9 +1,6 @@
 <?
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 $rsDailyMud = $infosystem->Execute("SELECT `well_id`, `r1`, `r2`, `r3`, `r4`, `sump`, `quantity` FROM `daily_mud` ORDER BY `well_id`");
 ?>

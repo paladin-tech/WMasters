@@ -1,14 +1,7 @@
 <?
-session_start();
-if(!isset($_SESSION["username"])) header("location:index.php");
-
-// Including ADODB class and DB connection config
+include("sessionCheck.php");
+include("db.php");
 include_once("adodb/toexport.inc.php");
-include_once("adodb/adodb.inc.php");
-include_once("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
 
 $todayShort = date("y-m-d", mktime());
 $today = date("Y/m/d", mktime());

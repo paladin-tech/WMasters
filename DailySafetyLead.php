@@ -1,10 +1,6 @@
 <?
-session_start();
-if(!isset($_SESSION["username"])||$_SESSION['levelid']!=2) header("location:index.php");
-
-// Including ADODB class and DB connection config
-require("adodb/adodb.inc.php");
-require("infosystem.php");
+include("sessionCheck.php");
+include("db.php");
 
 $rsDailySafety = $infosystem->Execute("SELECT `recordID`, `user`, `entrydate`, `reviewed` FROM `wm_dailysafety` ORDER BY `entrydate` DESC LIMIT 10");
 ?>
@@ -17,9 +13,9 @@ $rsDailySafety = $infosystem->Execute("SELECT `recordID`, `user`, `entrydate`, `
 <div id="mainForm" style="padding:20px;">
 <table border="0" cellspacing="1" cellpadding="5">
 	<tr>
-        <th>User</td>
-        <th align="center">Entry Date</td>
-        <th>&nbsp;</td>
+        <th>User</th>
+        <th align="center">Entry Date</th>
+        <th>&nbsp;</th>
     </tr><?
 	while(!$rsDailySafety->EOF) {
 	list($x_recordID, $x_user, $x_entrydate, $x_reviewed) = $rsDailySafety->fields; ?>

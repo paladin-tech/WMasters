@@ -1,9 +1,6 @@
 <?
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 $rsMudProductList = $infosystem->Execute("SELECT `mud_product_id`, `mud_product` FROM `mud_product_list`");
 $mudProductCount = $rsMudProductList->RecordCount();

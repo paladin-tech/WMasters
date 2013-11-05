@@ -1,13 +1,6 @@
 <?
-session_start();
-if(!isset($_SESSION["username"])) header("location:index.php");
-
-// Including ADODB class and DB connection config
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 if(isset($_GET['wellId'])) {
 

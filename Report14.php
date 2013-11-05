@@ -1,9 +1,6 @@
 <?
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 $rsWells = $infosystem->Execute("SELECT `well_id`, `issued_for_rollback`  FROM `wells_construction` WHERE `active` = 1");
 ?>

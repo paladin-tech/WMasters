@@ -1,7 +1,6 @@
-<? 
-session_start();
-if(!isset($_SESSION["username"])) header("location:index.php");
- 
+<?
+include("sessionCheck.php");
+
 require_once ('db.inc');
 ?>
 

@@ -1,9 +1,6 @@
 <?
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 $rsWells = $infosystem->Execute("SELECT `well_id`, `flag_requested`, `flagged`, `survey_requested_BASE`, `survey_completed_BASE`, `survey_requested_AS_BUILT`, `survey_requested_R1`, `survey_completed_R1`, `survey_requested_R2`, `survey_completed_R2`, `survey_requested_R3`, `survey_completed_R3`, `survey_requested_R4`, `survey_completed_R4`  FROM `wells_construction` WHERE `active` = 1");
 ?>

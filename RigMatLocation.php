@@ -1,13 +1,6 @@
 <?
-session_start();
-if(!isset($_SESSION["username"])) header("location:index.php");
-
-// Including ADODB class and DB connection config
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 // Gathering data for combo's
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");

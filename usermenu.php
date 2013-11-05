@@ -1,8 +1,6 @@
 <?
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 session_start();
 $accessLead = ($_SESSION['levelid']==2)?true:false;

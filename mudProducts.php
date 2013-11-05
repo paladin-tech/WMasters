@@ -1,6 +1,5 @@
 <?
-session_start();
-if(!isset($_SESSION["username"])) header("location:index.php");
+include("sessionCheck.php");
 
 // Including ADODB class and DB connection config
 require("adodb/adodb.inc.php");

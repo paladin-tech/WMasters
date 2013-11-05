@@ -1,9 +1,6 @@
 <?
-require("adodb/adodb.inc.php");
-require("infosystem.php");
-
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
+include("sessionCheck.php");
+include("db.php");
 
 $rsWells = $infosystem->Execute("SELECT `well_id`, `log_gps_north_1`, `log_gps_east_1`, `log_conifer_1`, `log_volume_1`, `log_gps_north_2`, `log_gps_east_2`, `log_conifer_2`, `log_volume_2` FROM `wells_construction` WHERE `active` = 1");
 

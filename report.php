@@ -1,10 +1,6 @@
 <?
-session_start();
-if(!isset($_SESSION["username"])) header("location:index.php");
-
-// Including ADODB class and DB connection config
-require("adodb/adodb.inc.php");
-require("infosystem.php");
+include("sessionCheck.php");
+include("db.php");
 
 $fordate=$_GET["fordate"];
 
