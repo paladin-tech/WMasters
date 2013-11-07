@@ -2,7 +2,6 @@
 include("sessionCheck.php");
 include("db.php");
 
-session_start();
 $accessLead = ($_SESSION['levelid']==2)?true:false;
 
 list($DailySafety, $DailyInputs, $SupervisorsDaily, $ConDaily, $SurveyAccess, $DrillingGeotech, $ConPerWell, $ConstContr, $ConHydro, $ConVacuum, $ConWaterCross, $Water, $Vacuum, $WellConUpdate, $Report1, $Report2, $Report4, $Report5, $Report6, $Report7, $Report8, $Report9, $Report10, $Report11, $Report12, $Report) = $infosystem->Execute("SELECT `DailySafety`, `DailyInputs`, `SupervisorsDaily`, `ConDaily`, `SurveyAccess`, `DrillingGeotech`, `ConPerWell`, `ConstContr`, `ConHydro`, `ConVacuum`,`ConWaterCross`, `Water`, `Vacuum`, `WellConUpdate`, `Report1`, `Report2`, `Report4`, `Report5`, `Report6`, `Report7`, `Report8`, `Report9`, `Report10`, `Report11`, `Report12`, `Report` FROM `wm_company` WHERE `companyID` = ".$_SESSION['companyid'])->fields;
@@ -219,13 +218,13 @@ td {
 					}
 					if($Report13!="d") { ?>
 					<tr>
-						<td><a href="Report13.php" target="_top">Report #13 - DSR</a></td>
+						<td><a href="Report13.php" target="_top">Report #13 - Survey Requests</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}
 					if($Report14!="d") { ?>
 					<tr>
-						<td><a href="Report13.php" target="_top">Report #14 - Construction Requests</a></td>
+						<td><a href="Report14.php" target="_top">Report #14 - Construction Requests</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}
@@ -247,24 +246,19 @@ td {
 						<td>Click to submit</td>
 					</tr><?
 					}
-					if($Report17!="d") { ?>
-					<tr>
-						<td><a href="Report17a.php" target="_top">Report #17 - Consumables for all the wells</a></td>
-						<td>Click to submit</td>
-					</tr><?
-					}
 					if($Report18!="d") { ?>
 					<tr>
-						<td><a href="Report18.php" target="_top">Report #18 - Consumables for all the wells</a></td>
+						<td><a href="Report18.php" target="_top">Report #18 - Consumables per Days</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}
 					if($Report19!="d") { ?>
 					<tr>
-						<td><a href="Report18a.php" target="_top">Report #18 - Consumables per wells</a></td>
+						<td><a href="Report19.php" target="_top">Report #19 - Consumables per Wells</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}
+
 					if($Report20!="d") { ?>
 					<tr>
 						<td><a href="Report20.php" target="_top">Report #20 - Temporary Log Deck</a></td>

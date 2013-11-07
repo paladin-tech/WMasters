@@ -3,7 +3,7 @@ include("sessionCheck.php");
 include("db.php");
 
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 
 if(isset($_POST['submit'])) {
 	foreach($_POST as $key => $value) $$key = $value;

@@ -1,6 +1,7 @@
 <?
 include("sessionCheck.php");
 include("db.php");
+include_once("adodb/toexport.inc.php");
 
 $todayShort = date("y-m-d", mktime());
 $today = date("Y/m/d", mktime());

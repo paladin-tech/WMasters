@@ -1,16 +1,10 @@
 <?
 include("sessionCheck.php");
-
-// Including ADODB class and DB connection config
-require("adodb/adodb.inc.php");
-require("infosystem.php");
+include("db.php");
 include("xajax_f.php");
 
-// Debugging info here can be useful if necessary
-//$infosystem->debug = true;
-
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 $rsMudProductList = $infosystem->Execute("SELECT `mud_product_id`, `mud_product` FROM `mud_product_list`");
 
 if(isset($_POST['submit'])) {

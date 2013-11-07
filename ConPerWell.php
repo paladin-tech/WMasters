@@ -1,9 +1,10 @@
 <?
 include("sessionCheck.php");
 include("db.php");
+include("xajax_f.php");
 
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `archive` = 0 ORDER BY `well_id`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `archive` = 0 ORDER BY `mainboard`");
 
 $user = $_SESSION['username'];
 
@@ -265,43 +266,7 @@ function setSelectedIndex(s1, v) {
     <td id="tdSnowFillWaterCrossing">&nbsp;</td>
   </tr>
   <tr>
-    <td colspan="7" style="padding: 10px; font-weight:bold; text-align: center; background: #DDDDDD;">Temporary Log Deck</td>
-  </tr>
-  <tr>
-    <td rowspan="3">&nbsp;</td>
-    <td>GPS Coordinates North</td>
-    <td>GPS East</td>
-    <td colspan="2">Conifer / Deciduous</td>
-    <td colspan="2">Volume [m3]</td>
-  </tr>
-  <tr>
-    <td id="tdGPSCoordinatesNorth1">&nbsp;</td>
-    <td id="tdGPSEast1">&nbsp;</td>
-    <td colspan="2" id="tdConiferDeciduous1">&nbsp;</td>
-    <td colspan="2" id="tdVolume1">&nbsp;</td>
-  </tr>
-  <tr>
-    <td id="tdGPSCoordinatesNorth2">&nbsp;</td>
-    <td id="tdGPSEast2">&nbsp;</td>
-    <td colspan="2" id="tdConiferDeciduous2">&nbsp;</td>
-    <td colspan="2" id="tdVolume2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td colspan="7" style="padding: 10px; font-weight:bold; text-align: center; background: #DDDDDD;">Rig Mat Location</td>
-  </tr>
-  <tr>
-    <td rowspan="2">&nbsp;</td>
-    <td>GPS Coordinates North</td>
-    <td>GPS East</td>
-    <td colspan="2">Number of Rig Mats</td>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-
-  <tr>
-      <td id="tdGPSCoordinatesNorth3">&nbsp;</td>
-      <td id="tdGPSEast3">&nbsp;</td>
-      <td colspan="2" id="tdNumberOfRigMats">&nbsp;</td>
-    <td colspan="2"><input type="submit" name="submit" id="submit" value="Submit"<?=$btnSubmitDisabled?> /></td>
+    <td align="CENTER" colspan="7"><input type="submit" name="submit" id="submit" value="Submit"<?=$btnSubmitDisabled?> /></td>
   </tr>
 </table>
 </form>

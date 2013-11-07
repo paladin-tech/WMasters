@@ -31,9 +31,9 @@ if(isset($_GET['truckId']) && isset($_GET['dateDaily'])) {
 }
 
 $rsTruck = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = 'Vacuum'");
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");
-if($wellsUsed != '') $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` NOT IN (" . $wellsUsed . ")");
-else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
+if($wellsUsed != '') $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` NOT IN (" . $wellsUsed . ") ORDER BY `mainboard`");
+else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE NOW() BETWEEN `start_date` AND `end_date`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

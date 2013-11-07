@@ -14,11 +14,11 @@
 	if (!isset($REQUEST_URI)){
 		$REQUEST_URI=$PHP_SELF;
 	}
-   $MM_infosystem_HOSTNAME = "wmastersDEV.db.11749675.hostedresource.com";
+   $MM_infosystem_HOSTNAME = "wmastersWM.db.11749675.hostedresource.com";
    $MM_infosystem_DBTYPE = "mysql";
-   $MM_infosystem_DATABASE = "wmastersDEV";
-   $MM_infosystem_USERNAME = "wmastersDEV";
-   $MM_infosystem_PASSWORD = "Dario13BGD!";
+   $MM_infosystem_DATABASE = "wmastersWM";
+   $MM_infosystem_USERNAME = "wmastersWM";
+   $MM_infosystem_PASSWORD = "wmasters13WM!";
    ADOLoadCode($MM_infosystem_DBTYPE);
    
    $infosystem=&ADONewConnection($MM_infosystem_DBTYPE);

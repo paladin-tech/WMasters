@@ -4,7 +4,7 @@ include("db.php");
 include("xajax_f.php");
 
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `archive` = 0 ORDER BY `well_id`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `archive` = 0  ORDER BY `mainboard`");
 
 $user = $_SESSION['username'];
 
@@ -159,10 +159,10 @@ function setSelectedIndex(s1, v) {
   </tr>
 
   <tr>
-    <td rowspan="16">&nbsp;</td>
+    <td rowspan="17">&nbsp;</td>
     <td>Letter of Authority</td>
     <td id="tdLetterOfAuthority">&nbsp;</td>
-    <td rowspan="16" colspan="4">&nbsp;</td>
+    <td rowspan="17" colspan="4">&nbsp;</td>
   </tr>
   <tr>
     <td>Start Date of Entry</td>
@@ -283,53 +283,7 @@ function setSelectedIndex(s1, v) {
     </td>
   </tr>
   <tr>
-    <td colspan="7" style="padding: 10px; font-weight:bold; text-align: center; background: #DDDDDD;">Temporary Log Deck</td>
-  </tr>
-  <tr>
-    <td rowspan="3">&nbsp;</td>
-    <td>GPS Coordinates North</td>
-    <td>GPS East</td>
-    <td colspan="2">Conifer / Deciduous</td>
-    <td colspan="2">Volume [m3]</td>
-  </tr>
-  <tr>
-    <td><input type="text" name="log_gps_north_1" id="log_gps_north_1"<?=$readOnly?> /></td>
-    <td><input type="text" name="log_gps_east_1" id="log_gps_east_1"<?=$readOnly?> /></td>
-    <td colspan="2">
-      <select name="log_conifer_1" id="log_conifer_1"<?=$readOnly?>>
-          <option value=""></option>
-          <option value="Conifer">Conifer</option>
-          <option value="Deciduous">Deciduous</option>
-      </select>
-    </td>
-    <td colspan="2"><input type="text" name="log_volume_1" id="log_volume_1"<?=$readOnly?> /></td>
-  </tr>
-  <tr>
-    <td><input type="text" name="log_gps_north_2" id="log_gps_north_2"<?=$readOnly?> /></td>
-    <td><input type="text" name="log_gps_east_2" id="log_gps_east_2"<?=$readOnly?> /></td>
-    <td colspan="2">
-        <select name="log_conifer_2" id="log_conifer_2"<?=$readOnly?>>
-            <option value=""></option>
-            <option value="Conifer">Conifer</option>
-            <option value="Deciduous">Deciduous</option>
-        </select>
-    <td colspan="2"><input type="text" name="log_volume_2" id="log_volume_2"<?=$readOnly?> /></td>
-  </tr>
-  <tr>
-    <td colspan="7" style="padding: 10px; font-weight:bold; text-align: center; background: #DDDDDD;">Rig Mat Location</td>
-  </tr>
-  <tr>
-    <td rowspan="2">&nbsp;</td>
-    <td>GPS Coordinates North</td>
-    <td>GPS East</td>
-    <td colspan="2">Number of Rig Mats</td>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td><input type="text" name="location1_gps_north" id="location1_gps_north"<?=$readOnly?> /></td>
-    <td><input type="text" name="location1_gps_east" id="location1_gps_east"<?=$readOnly?> /></td>
-    <td colspan="2"><input type="text" name="location1_number_of_rig_mats" id="location1_number_of_rig_mats"<?=$readOnly?> /></td>
-    <td colspan="2"><input type="submit" name="submit" id="submit" value="Submit"<?=$btnSubmitDisabled?> /></td>
+    <td align="CENTER" colspan="7"><input type="submit" name="submit" id="submit" value="Submit"<?=$btnSubmitDisabled?> /></td>
   </tr>
 </table>
 </form>
