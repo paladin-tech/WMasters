@@ -4,7 +4,7 @@ include("db.php");
 include("xajax_f.php");
 
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `archive` = 0 ORDER BY `mainboard`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `active` = 1 AND `archive` = 0 ORDER BY `mainboard`");
 
 $user = $_SESSION['username'];
 

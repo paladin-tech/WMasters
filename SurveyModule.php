@@ -1,9 +1,16 @@
 <?
-include("sessionCheck.php");
-include("db.php");
+session_start();
+if(!isset($_SESSION["username"])) header("location:index.php");
+
+// Including ADODB class and DB connection config
+require("adodb/adodb.inc.php");
+require("infosystem.php");
+
+// Debugging info here can be useful if necessary
+//$infosystem->debug = true;
 
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `active` = 1  ORDER BY `mainboard`");
 
 $user = $_SESSION['username'];
 
@@ -156,7 +163,7 @@ if(isset($_POST['submit'])) {
 				</tr>
 				<tr>
 					<td>Flag Requested</td>
-					<td id="tdFlagRequested"><?= $flag_requested ?></td>
+					<td id="tdFlagRequested"><?= ($flag_requested != '0000-00-00') ? $flag_requested : "" ?></td>
 				</tr>
 				<tr>
 					<td>Flag Done</td>

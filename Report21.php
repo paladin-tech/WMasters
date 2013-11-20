@@ -2,7 +2,7 @@
 include("sessionCheck.php");
 include("db.php");
 
-$rsWells = $infosystem->Execute("SELECT `well_id`, `location1_gps_north`, `location1_gps_east`, `location1_number_of_rig_mats` FROM `wells_construction` WHERE `active` = 1");
+$rsWells = $infosystem->Execute("SELECT `well_id`, `location1_gps_north`, `location1_gps_east`, `location1_number_of_rig_mats` FROM `wells_construction` WHERE `active` = 1 AND (`location1_gps_north`>0 OR `location1_gps_east`>0 OR `location1_number_of_rig_mats`>0)  ORDER BY `mainboard`");
 
 // Data for old Report #2, now part of Report #15
 

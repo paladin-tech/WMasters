@@ -31,9 +31,9 @@ if(isset($_GET['truckId']) && isset($_GET['dateDaily'])) {
 $rsTruck = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = 'Vacuum'");
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 $rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
-$rsSump = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_vacuum` WHERE (NOW() BETWEEN `licence_effective_date` AND `licence_expiry_date`) OR (NOW() > `licence_effective_date` AND `licence_expiry_date` = '0000-00-00')");
-$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE (NOW() BETWEEN `licence_effective_date` AND `licence_expiry_date`) OR (NOW() > `licence_effective_date` AND `licence_expiry_date` = '0000-00-00')");
-//$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE `area` = $y_area AND (NOW() BETWEEN `licence_effective_date` AND `licence_expiry_date`) OR (NOW() > `licence_effective_date` AND `licence_expiry_date` = '0000-00-00')");
+$rsSump = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_vacuum` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+//$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE `area` = $y_area AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 if($wellsUsed != '') $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` NOT IN (" . $wellsUsed . ") ORDER BY `mainboard`");
 else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 //$rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE NOW() BETWEEN `start_date` AND `end_date`");

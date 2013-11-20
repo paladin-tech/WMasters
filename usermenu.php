@@ -109,6 +109,13 @@ td {
 					</tr>
 					<?
 					}
+					if($vacuum!="d") { ?>
+					<tr>
+						<td><a href="Vacuum.php" target="_top">Vacuum</a></td>
+						<td>Input time from 00:00-23:45</td>
+					</tr>
+					<?
+					}
 					if($MudProducts!="d") { ?>
 					<tr>
 						<td><a href="MudProducts.php" target="_top">Well and Mud Products</a></td>

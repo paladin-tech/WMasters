@@ -2,7 +2,7 @@
 include("sessionCheck.php");
 include("db.php");
 
-$rsWells = $infosystem->Execute("SELECT `well_id`, `log_gps_north_1`, `log_gps_east_1`, `log_conifer_1`, `log_volume_1`, `log_gps_north_2`, `log_gps_east_2`, `log_conifer_2`, `log_volume_2` FROM `wells_construction` WHERE `active` = 1");
+$rsWells = $infosystem->Execute("SELECT `well_id`, `log_gps_north_1`, `log_gps_east_1`, `log_conifer_1`, `log_volume_1`, `log_gps_north_2`, `log_gps_east_2`, `log_conifer_2`, `log_volume_2` FROM `wells_construction` WHERE `active` = 1 AND (`log_gps_north_1`>0 OR `log_gps_east_1`>0 OR `log_conifer_1` NOT LIKE '' OR `log_volume_1`>0 OR `log_gps_north_2`>0 OR `log_gps_east_2`>0 OR `log_conifer_2` NOT LIKE '' OR `log_volume_2`>0)  ORDER BY `mainboard`");
 
 // Data for old Report #2, now part of Report #15
 

@@ -7,14 +7,15 @@ $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction
 
 if(isset($_POST['submit'])) {
 	foreach($_POST as $key => $value) $$key = $value;
-	$infosystem->Execute("UPDATE `wells_construction` SET `flagged` = '{$flagged}', `survey_requested_BASE` = '{$survey_requested_BASE}', `survey_requested_AS_BUILT` = '{$survey_requested_AS_BUILT}', `survey_requested_R1` = '{$survey_requested_R1}', `survey_requested_R2` = '{$survey_requested_R2}', `survey_requested_R3` = '{$survey_requested_R3}', `survey_requested_R4` = '{$survey_requested_R4}' WHERE `well_id` = '{$selWell}'");
+	$infosystem->Execute("UPDATE `wells_construction` SET `flagged` = '{$flagged}', `survey_requested_BASE` = '{$survey_requested_BASE}', `survey_requested_AS_BUILT` = '{$survey_requested_AS_BUILT}', `survey_requested_R1` = '{$survey_requested_R1}', `survey_requested_R2` = '{$survey_requested_R2}', `survey_requested_R3` = '{$survey_requested_R3}', `survey_requested_R4` = '{$survey_requested_R4}', `instrumentation_comments_BASE` = '{$instrumentation_comments_BASE}', `general_comments_BASE` = '{$general_comments_BASE}', `instrumentation_comments_AS_BUILT` = '{$instrumentation_comments_AS_BUILT}', `general_comments_AS_BUILT` = '{$general_comments_AS_BUILT}', `instrumentation_comments_R1` = '{$instrumentation_comments_R1}', `general_comments_R1` = '{$general_comments_R1}', `instrumentation_comments_R2` = '{$instrumentation_comments_R2}', `general_comments_R2` = '{$general_comments_R2}', `instrumentation_comments_R3` = '{$instrumentation_comments_R3}', `general_comments_R3` = '{$general_comments_R3}', `instrumentation_comments_R4` = '{$instrumentation_comments_R4}', `general_comments_R4` = '{$general_comments_R4}' WHERE `well_id` = '{$selWell}'");
+	$infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Drilling Module', '{$user}')");
 }
 
 if(isset($_GET['wellId'])) {
 	$well_id = $_GET['wellId'];
 	$check = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` = '{$well_id}'");
 	if($check->RecordCount() != 0) {
-		list($designed_north, $designed_east, $rr, $flagged, $survey_requested_BASE, $survey_completed_BASE, $gps_north_BASE, $gps_east_BASE, $GL_BASE, $TOC_BASE, $instrumentation_comments_BASE, $general_comments_BASE, $as_built_completed_BASE, $final_as_built_BASE, $survey_requested_AS_BUILT, $survey_completed_AS_BUILT, $gps_north_AS_BUILT, $gps_east_AS_BUILT, $GL_AS_BUILT, $TOC_AS_BUILT, $instrumentation_comments_AS_BUILT, $general_comments_AS_BUILT, $as_built_completed_AS_BUILT, $final_as_built_AS_BUILT, $survey_requested_R1, $survey_completed_R1, $gps_north_R1, $gps_east_R1, $GL_R1, $TOC_R1, $instrumentation_comments_R1, $general_comments_R1, $as_built_completed_R1, $final_as_built_R1, $survey_requested_R2, $survey_completed_R2, $gps_north_R2, $gps_east_R2, $GL_R2, $TOC_R2, $instrumentation_comments_R2, $general_comments_R2, $as_built_completed_R2, $final_as_built_R2, $survey_requested_R3, $survey_completed_R3, $gps_north_R3, $gps_east_R3, $GL_R3, $TOC_R3, $instrumentation_comments_R3, $general_comments_R3, $as_built_completed_R3, $final_as_built_R3, $survey_requested_R4, $survey_completed_R4, $gps_north_R4, $gps_east_R4, $GL_R4, $TOC_R4, $instrumentation_comments_R4, $general_comments_R4, $as_built_completed_R4, $final_as_built_R4) = $infosystem->Execute("SELECT `designed_north`, `designed_east`, `rr`, `flagged`, `survey_requested_BASE`, `survey_completed_BASE`, `gps_north_BASE`, `gps_east_BASE`, `GL_BASE`, `TOC_BASE`, `instrumentation_comments_BASE`, `general_comments_BASE`, `as_built_completed_BASE`, `final_as_built_BASE`, `survey_requested_AS_BUILT`, `survey_completed_AS_BUILT`, `gps_north_AS_BUILT`, `gps_east_AS_BUILT`, `GL_AS_BUILT`, `TOC_AS_BUILT`, `instrumentation_comments_AS_BUILT`, `general_comments_AS_BUILT`, `as_built_completed_AS_BUILT`, `final_as_built_AS_BUILT`, `survey_requested_R1`, `survey_completed_R1`, `gps_north_R1`, `gps_east_R1`, `GL_R1`, `TOC_R1`, `instrumentation_comments_R1`, `general_comments_R1`, `as_built_completed_R1`, `final_as_built_R1`, `survey_requested_R2`, `survey_completed_R2`, `gps_north_R2`, `gps_east_R2`, `GL_R2`, `TOC_R2`, `instrumentation_comments_R2`, `general_comments_R2`, `as_built_completed_R2`, `final_as_built_R2`, `survey_requested_R3`, `survey_completed_R3`, `gps_north_R3`, `gps_east_R3`, `GL_R3`, `TOC_R3`, `instrumentation_comments_R3`, `general_comments_R3`, `as_built_completed_R3`, `final_as_built_R3`, `survey_requested_R4`, `survey_completed_R4`, `gps_north_R4`, `gps_east_R4`, `GL_R4`, `TOC_R4`, `instrumentation_comments_R4`, `general_comments_R4`, `as_built_completed_R4`, `final_as_built_R4` FROM `wells_construction` WHERE `well_id` = '{$well_id}'")->fields;
+		list($designed_north, $designed_east, $rr, $flag_requested, $flagged, $survey_requested_BASE, $survey_completed_BASE, $gps_north_BASE, $gps_east_BASE, $GL_BASE, $TOC_BASE, $instrumentation_comments_BASE, $general_comments_BASE, $as_built_completed_BASE, $final_as_built_BASE, $survey_requested_AS_BUILT, $survey_completed_AS_BUILT, $gps_north_AS_BUILT, $gps_east_AS_BUILT, $GL_AS_BUILT, $TOC_AS_BUILT, $instrumentation_comments_AS_BUILT, $general_comments_AS_BUILT, $as_built_completed_AS_BUILT, $final_as_built_AS_BUILT, $survey_requested_R1, $survey_completed_R1, $gps_north_R1, $gps_east_R1, $GL_R1, $TOC_R1, $instrumentation_comments_R1, $general_comments_R1, $as_built_completed_R1, $final_as_built_R1, $survey_requested_R2, $survey_completed_R2, $gps_north_R2, $gps_east_R2, $GL_R2, $TOC_R2, $instrumentation_comments_R2, $general_comments_R2, $as_built_completed_R2, $final_as_built_R2, $survey_requested_R3, $survey_completed_R3, $gps_north_R3, $gps_east_R3, $GL_R3, $TOC_R3, $instrumentation_comments_R3, $general_comments_R3, $as_built_completed_R3, $final_as_built_R3, $survey_requested_R4, $survey_completed_R4, $gps_north_R4, $gps_east_R4, $GL_R4, $TOC_R4, $instrumentation_comments_R4, $general_comments_R4, $as_built_completed_R4, $final_as_built_R4) = $infosystem->Execute("SELECT `designed_north`, `designed_east`, `rr`, `flag_requested`, `flagged`, `survey_requested_BASE`, `survey_completed_BASE`, `gps_north_BASE`, `gps_east_BASE`, `GL_BASE`, `TOC_BASE`, `instrumentation_comments_BASE`, `general_comments_BASE`, `as_built_completed_BASE`, `final_as_built_BASE`, `survey_requested_AS_BUILT`, `survey_completed_AS_BUILT`, `gps_north_AS_BUILT`, `gps_east_AS_BUILT`, `GL_AS_BUILT`, `TOC_AS_BUILT`, `instrumentation_comments_AS_BUILT`, `general_comments_AS_BUILT`, `as_built_completed_AS_BUILT`, `final_as_built_AS_BUILT`, `survey_requested_R1`, `survey_completed_R1`, `gps_north_R1`, `gps_east_R1`, `GL_R1`, `TOC_R1`, `instrumentation_comments_R1`, `general_comments_R1`, `as_built_completed_R1`, `final_as_built_R1`, `survey_requested_R2`, `survey_completed_R2`, `gps_north_R2`, `gps_east_R2`, `GL_R2`, `TOC_R2`, `instrumentation_comments_R2`, `general_comments_R2`, `as_built_completed_R2`, `final_as_built_R2`, `survey_requested_R3`, `survey_completed_R3`, `gps_north_R3`, `gps_east_R3`, `GL_R3`, `TOC_R3`, `instrumentation_comments_R3`, `general_comments_R3`, `as_built_completed_R3`, `final_as_built_R3`, `survey_requested_R4`, `survey_completed_R4`, `gps_north_R4`, `gps_east_R4`, `GL_R4`, `TOC_R4`, `instrumentation_comments_R4`, `general_comments_R4`, `as_built_completed_R4`, `final_as_built_R4` FROM `wells_construction` WHERE `well_id` = '{$well_id}'")->fields;
 	}
 }
 
@@ -99,11 +100,11 @@ $dateFields = array('flagged', 'survey_requested_BASE', 'survey_requested_AS_BUI
 					</tr>
 					<tr>
 						<td>Flag Requested</td>
-						<td id="tdFlagRequested">&nbsp;</td>
+						<td id="tdFlagRequested"><?= ($flag_requested != '0000-00-00') ? $flag_requested : "" ?></td>
 					</tr>
 					<tr>
 						<td>Flag Done</td>
-						<td><input type="text" id="flagged" class="datepicker" name="flagged" value="<?= (isset($well_id)) ? $flagged : "" ?>"></td>
+						<td id="tdFlagDone"><?= ($flagged != '0000-00-00') ? $flagged : "" ?></td>
 					</tr>
 					<tr>
 						<td>Designed North</td>
@@ -198,24 +199,24 @@ $dateFields = array('flagged', 'survey_requested_BASE', 'survey_requested_AS_BUI
 						<td id="tdDeltaEastR3"><?= (($designed_east - $gps_east_R3) > 10) ? "<font color=\"red\"><b>" . number_format(abs($designed_east - $gps_east_R3), 3, ".", "") . "</b></font>" : number_format(abs($designed_east - $gps_east_R3), 3, ".", "") ?></td>
 						<td id="tdDeltaEastR4"><?= (($designed_east - $gps_east_R4) > 10) ? "<font color=\"red\"><b>" . number_format(abs($designed_east - $gps_east_R4), 3, ".", "") . "</b></font>" : number_format(abs($designed_east - $gps_east_R4), 3, ".", "") ?></td>
 					</tr>
-					<tr>
-						<td>Instrumentation Comments</td>
-						<td><?= (isset($well_id)) ? $instrumentation_comments_BASE : "" ?></td>
-						<td><?= (isset($well_id)) ? $instrumentation_comments_AS_BUILT : "" ?></td>
-						<td><?= (isset($well_id)) ? $instrumentation_comments_R1 : "" ?></td>
-						<td><?= (isset($well_id)) ? $instrumentation_comments_R2 : "" ?></td>
-						<td><?= (isset($well_id)) ? $instrumentation_comments_R3 : "" ?></td>
-						<td><?= (isset($well_id)) ? $instrumentation_comments_R4 : "" ?></td>
-					</tr>
-					<tr>
-						<td>General Comments</td>
-						<td><?= (isset($well_id)) ? $general_comments_BASE : "" ?></td>
-						<td><?= (isset($well_id)) ? $general_comments_AS_BUILT : "" ?></td>
-						<td><?= (isset($well_id)) ? $general_comments_R1 : "" ?></td>
-						<td><?= (isset($well_id)) ? $general_comments_R2 : "" ?></td>
-						<td><?= (isset($well_id)) ? $general_comments_R3 : "" ?></td>
-						<td><?= (isset($well_id)) ? $general_comments_R4 : "" ?></td>
-					</tr>
+				<tr>
+					<td>Instrumentation Comments</td>
+					<td><textarea name="instrumentation_comments_BASE" id="instrumentation_comments_BASE"><?=(isset($well_id))?$instrumentation_comments_BASE:""?></textarea></td>
+					<td><textarea name="instrumentation_comments_AS_BUILT" id="instrumentation_comments_AS_BUILT"><?=(isset($well_id))?$instrumentation_comments_AS_BUILT:""?></textarea></td>
+					<td><textarea name="instrumentation_comments_R1" id="instrumentation_comments_R1"><?=(isset($well_id))?$instrumentation_comments_R1:""?></textarea></td>
+					<td><textarea name="instrumentation_comments_R2" id="instrumentation_comments_R2"><?=(isset($well_id))?$instrumentation_comments_R2:""?></textarea></td>
+					<td><textarea name="instrumentation_comments_R3" id="instrumentation_comments_R3"><?=(isset($well_id))?$instrumentation_comments_R3:""?></textarea></td>
+					<td><textarea name="instrumentation_comments_R4" id="instrumentation_comments_R4"><?=(isset($well_id))?$instrumentation_comments_R4:""?></textarea></td>
+				</tr>
+				<tr>
+					<td>General Comments</td>
+					<td><textarea name="general_comments_BASE" id="general_comments_BASE"><?=(isset($well_id))?$general_comments_BASE:""?></textarea></td>
+					<td><textarea name="general_comments_AS_BUILT" id="general_comments_AS_BUILT"><?=(isset($well_id))?$general_comments_AS_BUILT:""?></textarea></td>
+					<td><textarea name="general_comments_R1" id="general_comments_R1"><?=(isset($well_id))?$general_comments_R1:""?></textarea></td>
+					<td><textarea name="general_comments_R2" id="general_comments_R2"><?=(isset($well_id))?$general_comments_R2:""?></textarea></td>
+					<td><textarea name="general_comments_R3" id="general_comments_R3"><?=(isset($well_id))?$general_comments_R3:""?></textarea></td>
+					<td><textarea name="general_comments_R4" id="general_comments_R4"><?=(isset($well_id))?$general_comments_R4:""?></textarea></td>
+				</tr>
 					<tr>
 						<td>As-Built Completed</td>
 						<td><input type="checkbox" name="as_built_completed_BASE" id="as_built_completed_BASE" value="1"<?=(isset($well_id) && $as_built_completed_BASE == 1)?" checked":""?> disabled></td>
