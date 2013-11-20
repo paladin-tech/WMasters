@@ -79,7 +79,7 @@ if(isset($_POST['submit'])) {
 					<td><input type="text" name="txtQuantity[]" value="<?= (isset($wellId)) ? $quantity : "" ?>"></td>
 				</tr><?
 					$rsBertramMaterial->MoveNext();
-				}				}
+				}
 				?>
 				<tr>
 					<input type="hidden" name="hidProductID[]" value="">
