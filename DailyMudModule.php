@@ -6,21 +6,19 @@ if(isset($_POST['submit'])) {
 	foreach($_POST['selWell'] as $key => $value) {
 		$dailyMudHid = $_POST['hidDaily'][$key];
 		$dailyMudWell = $_POST['selWell'][$key];
-		$dailyMudR1 = (isset($_POST['chkR1'][$key])) ? 1 : 0;
-		$dailyMudR2 = (isset($_POST['chkR2'][$key])) ? 1 : 0;
-		$dailyMudR3 = (isset($_POST['chkR3'][$key])) ? 1 : 0;
-		$dailyMudR4 = (isset($_POST['chkR4'][$key])) ? 1 : 0;
+		$dailyMudSubWell = $_POST['selSubWell'][$key];
 		$dailyMudSump = $_POST['selSump'][$key];
+		$dailyMudCell = $_POST['selCell'][$key];
 		$dailyMudQuantity = $_POST['txtQuantity'][$key];
-		if($dailyMudHid == "" && $dailyMudWell != "") $infosystem->Execute("INSERT INTO `daily_mud` SET `truck_id` = '{$truckId}', `date` = '{$dateDaily}', `well_id` = '{$dailyMudWell}', `r1` = {$dailyMudR1}, `r2` = {$dailyMudR2}, `r3` = {$dailyMudR3}, `r4` = {$dailyMudR4}, `sump` = '{$dailyMudSump}', `quantity` = {$dailyMudQuantity}");
-		if($dailyMudHid != "") $infosystem->Execute("UPDATE `daily_mud` SET `r1` = {$dailyMudR1}, `r2` = {$dailyMudR2}, `r3` = {$dailyMudR3}, `r4` = {$dailyMudR4}, `sump` = '{$dailyMudSump}', `quantity` = {$dailyMudQuantity} WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}' AND `well_id` = '{$dailyMudWell}'");
+		if($dailyMudHid == "" && $dailyMudWell != "") $infosystem->Execute("INSERT INTO `wm_dailymud` SET `truck_id` = '{$truckId}', `date` = '{$dateDaily}', `well_id` = '{$dailyMudWell}', `subwell_id` = '{$dailyMudSubWell}', `sump` = '{$dailyMudSump}', `cell` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity}");
+		if($dailyMudHid != "") $infosystem->Execute("UPDATE `wm_dailymud` SET `subwell_id` = '{$dailyMudSubWell}', `sump` = '{$dailyMudSump}', `cell` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity} WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}' AND `well_id` = '{$dailyMudWell}'");
 	}
 }
 
 if(isset($_GET['truckId']) && isset($_GET['dateDaily'])) {
 	$truckId = $_GET['truckId'];
 	$dateDaily = $_GET['dateDaily'];
-	$rsDailyMud = $infosystem->Execute("SELECT `well_id`, `r1`, `r2`, `r3`, `r4`, `sump`, `quantity` FROM `daily_mud` WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}'");
+	$rsDailyMud = $infosystem->Execute("SELECT `well_id`, `subwell_id`, `sump`, `cell`, `quantity` FROM `wm_dailymud` WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}'");
 	$wellsUsed = array();
 	while(!$rsDailyMud->EOF) {
 		array_push($wellsUsed, "'".$rsDailyMud->Fields("well_id")."'");
@@ -32,9 +30,13 @@ if(isset($_GET['truckId']) && isset($_GET['dateDaily'])) {
 
 $rsTruck = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = 'Vacuum'");
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
+$rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
+$rsSump = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_vacuum` WHERE (NOW() BETWEEN `licence_effective_date` AND `licence_expiry_date`) OR (NOW() > `licence_effective_date` AND `licence_expiry_date` = '0000-00-00')");
+$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE (NOW() BETWEEN `licence_effective_date` AND `licence_expiry_date`) OR (NOW() > `licence_effective_date` AND `licence_expiry_date` = '0000-00-00')");
+//$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE `area` = $y_area AND (NOW() BETWEEN `licence_effective_date` AND `licence_expiry_date`) OR (NOW() > `licence_effective_date` AND `licence_expiry_date` = '0000-00-00')");
 if($wellsUsed != '') $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` NOT IN (" . $wellsUsed . ") ORDER BY `mainboard`");
 else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
-$rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE NOW() BETWEEN `start_date` AND `end_date`");
+//$rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE NOW() BETWEEN `start_date` AND `end_date`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -102,18 +104,16 @@ $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` 
 	</tr>
 	<tr>
 		<td>Well ID</td>
-		<td>R1</td>
-		<td>R2</td>
-		<td>R3</td>
-		<td>R4</td>
+		<td>SubWell ID</td>
 		<td>Sump</td>
+		<td>Cell</td>
 		<td>Quantity</td>
 		<td width="100%">&nbsp;</td>
 	</tr>
 	<?
 	if(isset($truckId) && isset($dateDaily)) {
 	while(!$rsDailyMud->EOF) {
-		list($well_id, $r1, $r2, $r3, $r4, $sump, $quantity) = $rsDailyMud->fields;
+		list($well_id, $subwell_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
 	?>
 	<tr>
 		<input type="hidden" name="hidDaily[]" value="1">
@@ -128,18 +128,36 @@ $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` 
 				} ?>
 			</select>
 		</td>
-		<td><input type="checkbox" name="chkR1[]"<?=(isset($truckId) && isset($dateDaily) && $r1 == 1)?" checked":""?>></td>
-		<td><input type="checkbox" name="chkR2[]"<?=(isset($truckId) && isset($dateDaily) && $r2 == 1)?" checked":""?>></td>
-		<td><input type="checkbox" name="chkR3[]"<?=(isset($truckId) && isset($dateDaily) && $r3 == 1)?" checked":""?>></td>
-		<td><input type="checkbox" name="chkR4[]"<?=(isset($truckId) && isset($dateDaily) && $r4 == 1)?" checked":""?>></td>
+		<td>
+			<select name="selSubWell[]">
+				<option value="">[SubWell ID]</option><?
+				$rsSubWell->MoveFirst();
+				while(!$rsSubWell->EOF) {
+					list($ySubWellId) = $rsSubWell->fields; ?>
+					<option value="<?=$ySubWellId?>"<?= (isset($truckId) && isset($dateDaily) && $subwell_id == $ySubWellId) ? " selected" : "" ?>><?=$ySubWellId?></option><?
+					$rsSubWell->MoveNext();
+				} ?>
+			</select>
+		</td>
 		<td>
 			<select name="selSump[]">
 				<option value="">[Sump]</option><?
 				$rsSump->MoveFirst();
 				while(!$rsSump->EOF) {
-					list($y_sump) = $rsSump->fields; ?>
-					<option value="<?=$y_sump?>"<?= (isset($truckId) && isset($dateDaily) && $sump == $y_sump) ? " selected" : "" ?>><?=$y_sump?></option><?
+					list($yArea) = $rsSump->fields; ?>
+					<option value="<?=$yArea?>"<?= (isset($truckId) && isset($dateDaily) && $sump == $yArea) ? " selected" : "" ?>><?=$yArea?></option><?
 					$rsSump->MoveNext();
+				} ?>
+			</select>
+		</td>
+		<td>
+			<select name="selCell[]">
+				<option value="">[Cell]</option><?
+				$rsCell->MoveFirst();
+				while(!$rsCell->EOF) {
+					list($ySumpNumber) = $rsCell->fields; ?>
+					<option value="<?=$ySumpNumber?>"<?= (isset($truckId) && isset($dateDaily) && $cell == $ySumpNumber) ? " selected" : "" ?>><?=$ySumpNumber?></option><?
+					$rsCell->MoveNext();
 				} ?>
 			</select>
 		</td>
@@ -156,25 +174,44 @@ $rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` 
 		<td>
 			<select name="selWell[]">
 				<option value="">[Well ID]</option><?
-				while(!$rsWellLicenceNew->EOF) {
-					list($y_well_id) = $rsWellLicenceNew->fields; ?>
+				$rsWellLicence->MoveFirst();
+				while(!$rsWellLicence->EOF) {
+					list($y_well_id) = $rsWellLicence->fields; ?>
 					<option value="<?=$y_well_id?>"><?=$y_well_id?></option><?
-					$rsWellLicenceNew->MoveNext();
+					$rsWellLicence->MoveNext();
 				} ?>
 			</select>
 		</td>
-		<td><input type="checkbox" name="chkR1[]"></td>
-		<td><input type="checkbox" name="chkR2[]"></td>
-		<td><input type="checkbox" name="chkR3[]"></td>
-		<td><input type="checkbox" name="chkR4[]"></td>
+		<td>
+			<select name="selSubWell[]">
+				<option value="">[SubWell ID]</option><?
+				$rsSubWell->MoveFirst();
+				while(!$rsSubWell->EOF) {
+					list($ySubWellId) = $rsSubWell->fields; ?>
+					<option value="<?=$ySubWellId?>"><?=$ySubWellId?></option><?
+					$rsSubWell->MoveNext();
+				} ?>
+			</select>
+		</td>
 		<td>
 			<select name="selSump[]">
 				<option value="">[Sump]</option><?
 				$rsSump->MoveFirst();
 				while(!$rsSump->EOF) {
-					list($y_sump) = $rsSump->fields; ?>
-					<option value="<?=$y_sump?>"><?=$y_sump?></option><?
+					list($yArea) = $rsSump->fields; ?>
+					<option value="<?=$yArea?>"><?=$yArea?></option><?
 					$rsSump->MoveNext();
+				} ?>
+			</select>
+		</td>
+		<td>
+			<select name="selCell[]">
+				<option value="">[Cell]</option><?
+				$rsCell->MoveFirst();
+				while(!$rsCell->EOF) {
+					list($ySumpNumber) = $rsCell->fields; ?>
+					<option value="<?=$ySumpNumber?>"><?=$ySumpNumber?></option><?
+					$rsCell->MoveNext();
 				} ?>
 			</select>
 		</td>

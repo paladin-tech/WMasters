@@ -19,5 +19,9 @@
 			<td style="vertical-align: top; text-align: center;"><a href="MudProductList.php" target="_top">Mud Product Administration</a></td>
 			<td style="vertical-align: top; text-align: center;">Select this to update data on existing wells or add a new one<br></td>
 		</tr>
+		<tr>
+			<td style="vertical-align: top; text-align: center;"><a href="BertramMaterialList.php" target="_top">Bertram Material Administration</a></td>
+			<td style="vertical-align: top; text-align: center;">Select this to update data on existing Bertram Material or add a new one<br></td>
+		</tr>
 	</tbody>
 </table>
