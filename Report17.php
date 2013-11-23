@@ -2,7 +2,8 @@
 include("sessionCheck.php");
 include("db.php");
 
-$rsDailyMud = $infosystem->Execute("SELECT `well_id`, `r1`, `r2`, `r3`, `r4`, `sump`, `quantity` FROM `daily_mud` ORDER BY `well_id`");
+$rsDailyMud = $infosystem->Execute("SELECT `well_id`, `subwell_id`, `sump`, `cell`, `quantity` FROM `wm_dailymud` ORDER BY `well_id`");
+$rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,30 +18,39 @@ $rsDailyMud = $infosystem->Execute("SELECT `well_id`, `r1`, `r2`, `r3`, `r4`, `s
 <table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC" width="100%">
 	<tr>
 		<td>Well ID</td>
-		<td>R1</td>
-		<td>R2</td>
-		<td>R3</td>
-		<td>R4</td>
+		<?
+		while(!$rsSubWell->EOF) {
+			list($xSubWell) = $rsSubWell->fields;
+		?>
+		<td><?= $xSubWell ?></td>
+		<?
+			$rsSubWell->MoveNext();
+		}
+		?>
 		<td>Sump</td>
+		<td>Cell</td>
 		<td>Quantity</td>
 		<td width="100%"></td>
 	</tr>
 	<?
 	$sum = 0;
 	while(!$rsDailyMud->EOF) {
-		list($well_id, $r1, $r2, $r3, $r4, $sump, $quantity) = $rsDailyMud->fields;
-		$r1 = ($r1 == 1) ? 'x' : '';
-		$r2 = ($r2 == 1) ? 'x' : '';
-		$r3 = ($r3 == 1) ? 'x' : '';
-		$r4 = ($r4 == 1) ? 'x' : '';
+		list($well_id, $subwell_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
 	?>
 	<tr>
 		<td nowrap><?= $well_id ?></td>
-		<td nowrap align="center"><?= $r1 ?></td>
-		<td nowrap align="center"><?= $r2 ?></td>
-		<td nowrap align="center"><?= $r3 ?></td>
-		<td nowrap align="center"><?= $r4 ?></td>
+		<?
+		$rsSubWell->MoveFirst();
+		while(!$rsSubWell->EOF) {
+			list($xSubWell) = $rsSubWell->fields;
+		?>
+		<td align="center"><?= ($subwell_id == $xSubWell) ? "x" : "" ?></td>
+		<?
+			$rsSubWell->MoveNext();
+		}
+		?>
 		<td nowrap align="center"><?= $sump ?></td>
+		<td nowrap align="center"><?= $cell ?></td>
 		<td nowrap align="right"><?= $quantity ?></td>
 		<td width="100%"></td>
 	</tr><?
@@ -49,7 +59,7 @@ $rsDailyMud = $infosystem->Execute("SELECT `well_id`, `r1`, `r2`, `r3`, `r4`, `s
 	}
 	?>
 	<tr>
-		<td colspan="6">Total</td>
+		<td colspan="8">Total</td>
 		<td align="right"><?= number_format($sum, 3) ?></td>
 		<td width="100%"></td>
 	</tr>

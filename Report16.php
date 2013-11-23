@@ -2,7 +2,8 @@
 include("sessionCheck.php");
 include("db.php");
 
-$rsDailyMud = $infosystem->Execute("SELECT `date`, `truck_id`, `well_id`, `r1`, `r2`, `r3`, `r4`, `sump`, `quantity` FROM `daily_mud` ORDER BY `date`, `truck_id`, `well_id`");
+$rsDailyMud = $infosystem->Execute("SELECT `truck_id`, `date`, `well_id`, `subwell_id`, `sump`, `cell`, `quantity` FROM `wm_dailymud` ORDER BY `date`, `truck_id`, `well_id`");
+$rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -19,27 +20,40 @@ $rsDailyMud = $infosystem->Execute("SELECT `date`, `truck_id`, `well_id`, `r1`, 
 		<td>Date</td>
 		<td>Truck #</td>
 		<td>Well ID</td>
-		<td>R1</td>
-		<td>R2</td>
-		<td>R3</td>
-		<td>R4</td>
+		<?
+		while(!$rsSubWell->EOF) {
+			list($xSubWell) = $rsSubWell->fields;
+		?>
+		<td><?= $xSubWell ?></td>
+		<?
+			$rsSubWell->MoveNext();
+		}
+		?>
 		<td>Sump</td>
+		<td>Cell</td>
 		<td>Quantity</td>
 		<td width="100%"></td>
 	</tr>
 	<?
 	while(!$rsDailyMud->EOF) {
-		list($date, $truck_id, $well_id, $r1, $r2, $r3, $r4, $sump, $quantity) = $rsDailyMud->fields;
+		list($truck_id, $date, $well_id, $subwell_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
 	?>
 	<tr>
 		<td nowrap><?= $date ?></td>
 		<td nowrap><?= $truck_id ?></td>
 		<td nowrap><?= $well_id ?></td>
-		<td nowrap><?= $r1 ?></td>
-		<td nowrap><?= $r2 ?></td>
-		<td nowrap><?= $r3 ?></td>
-		<td nowrap><?= $r4 ?></td>
+		<?
+		$rsSubWell->MoveFirst();
+		while(!$rsSubWell->EOF) {
+			list($xSubWell) = $rsSubWell->fields;
+		?>
+		<td align="center"><?= ($subwell_id == $xSubWell) ? "x" : "" ?></td>
+			<?
+			$rsSubWell->MoveNext();
+		}
+		?>
 		<td nowrap><?= $sump ?></td>
+		<td align="center" nowrap><?= $cell ?></td>
 		<td nowrap><?= $quantity ?></td>
 		<td width="100%"></td>
 	</tr><?
