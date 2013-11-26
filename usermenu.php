@@ -83,14 +83,14 @@ td {
 					}
 					if($ConHydro!="d") { ?>
 					<tr>
-						<td><a href="ConHydro.php" target="_top">Construction Hydro</a></td>
+						<td><a href="ConHydroVacuum.php?resourceType=water" target="_top">Construction Hydro</a></td>
 						<td>Input time from 00:00-23:45</td>
 					</tr>
 					<?
 					}
 					if($ConVacuum!="d") { ?>
 					<tr>
-						<td><a href="ConVacuum.php" target="_top">Construction Vacuum</a></td>
+						<td><a href="ConHydroVacuum.php?resourceType=vacuum" target="_top">Construction Vacuum</a></td>
 						<td>Input time from 00:00-23:45</td>
 					</tr>
 					<?
