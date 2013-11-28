@@ -3,11 +3,11 @@ include("sessionCheck.php");
 include("db.php");
 
 // Gathering data for combo's
-$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `active` = 1  ORDER BY `mainboard`");
+$rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 
 if(isset($_POST['submit'])) {
 	foreach($_POST as $key => $value) $$key = $value;
-	$infosystem->Execute("UPDATE `wells_construction` SET `flagged` = '{$flagged}', `survey_requested_BASE` = '{$survey_requested_BASE}', `survey_requested_AS_BUILT` = '{$survey_requested_AS_BUILT}', `survey_requested_R1` = '{$survey_requested_R1}', `survey_requested_R2` = '{$survey_requested_R2}', `survey_requested_R3` = '{$survey_requested_R3}', `survey_requested_R4` = '{$survey_requested_R4}', `instrumentation_comments_BASE` = '{$instrumentation_comments_BASE}', `general_comments_BASE` = '{$general_comments_BASE}', `instrumentation_comments_AS_BUILT` = '{$instrumentation_comments_AS_BUILT}', `general_comments_AS_BUILT` = '{$general_comments_AS_BUILT}', `instrumentation_comments_R1` = '{$instrumentation_comments_R1}', `general_comments_R1` = '{$general_comments_R1}', `instrumentation_comments_R2` = '{$instrumentation_comments_R2}', `general_comments_R2` = '{$general_comments_R2}', `instrumentation_comments_R3` = '{$instrumentation_comments_R3}', `general_comments_R3` = '{$general_comments_R3}', `instrumentation_comments_R4` = '{$instrumentation_comments_R4}', `general_comments_R4` = '{$general_comments_R4}' WHERE `well_id` = '{$selWell}'");
+	$infosystem->Execute("UPDATE `wells_construction` SET `ready_roll_back` = '{$ready_roll_back}', `approved_by_drilling` = '{$approved_by_drilling}', `flagged` = '{$flagged}', `survey_requested_BASE` = '{$survey_requested_BASE}', `survey_requested_AS_BUILT` = '{$survey_requested_AS_BUILT}', `survey_requested_R1` = '{$survey_requested_R1}', `survey_requested_R2` = '{$survey_requested_R2}', `survey_requested_R3` = '{$survey_requested_R3}', `survey_requested_R4` = '{$survey_requested_R4}', `instrumentation_comments_BASE` = '{$instrumentation_comments_BASE}', `general_comments_BASE` = '{$general_comments_BASE}', `instrumentation_comments_AS_BUILT` = '{$instrumentation_comments_AS_BUILT}', `general_comments_AS_BUILT` = '{$general_comments_AS_BUILT}', `instrumentation_comments_R1` = '{$instrumentation_comments_R1}', `general_comments_R1` = '{$general_comments_R1}', `instrumentation_comments_R2` = '{$instrumentation_comments_R2}', `general_comments_R2` = '{$general_comments_R2}', `instrumentation_comments_R3` = '{$instrumentation_comments_R3}', `general_comments_R3` = '{$general_comments_R3}', `instrumentation_comments_R4` = '{$instrumentation_comments_R4}', `general_comments_R4` = '{$general_comments_R4}' WHERE `well_id` = '{$selWell}'");
 	$infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Drilling Module', '{$user}')");
 }
 
@@ -15,11 +15,11 @@ if(isset($_GET['wellId'])) {
 	$well_id = $_GET['wellId'];
 	$check = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` = '{$well_id}'");
 	if($check->RecordCount() != 0) {
-		list($designed_north, $designed_east, $rr, $flag_requested, $flagged, $survey_requested_BASE, $survey_completed_BASE, $gps_north_BASE, $gps_east_BASE, $GL_BASE, $TOC_BASE, $instrumentation_comments_BASE, $general_comments_BASE, $as_built_completed_BASE, $final_as_built_BASE, $survey_requested_AS_BUILT, $survey_completed_AS_BUILT, $gps_north_AS_BUILT, $gps_east_AS_BUILT, $GL_AS_BUILT, $TOC_AS_BUILT, $instrumentation_comments_AS_BUILT, $general_comments_AS_BUILT, $as_built_completed_AS_BUILT, $final_as_built_AS_BUILT, $survey_requested_R1, $survey_completed_R1, $gps_north_R1, $gps_east_R1, $GL_R1, $TOC_R1, $instrumentation_comments_R1, $general_comments_R1, $as_built_completed_R1, $final_as_built_R1, $survey_requested_R2, $survey_completed_R2, $gps_north_R2, $gps_east_R2, $GL_R2, $TOC_R2, $instrumentation_comments_R2, $general_comments_R2, $as_built_completed_R2, $final_as_built_R2, $survey_requested_R3, $survey_completed_R3, $gps_north_R3, $gps_east_R3, $GL_R3, $TOC_R3, $instrumentation_comments_R3, $general_comments_R3, $as_built_completed_R3, $final_as_built_R3, $survey_requested_R4, $survey_completed_R4, $gps_north_R4, $gps_east_R4, $GL_R4, $TOC_R4, $instrumentation_comments_R4, $general_comments_R4, $as_built_completed_R4, $final_as_built_R4) = $infosystem->Execute("SELECT `designed_north`, `designed_east`, `rr`, `flag_requested`, `flagged`, `survey_requested_BASE`, `survey_completed_BASE`, `gps_north_BASE`, `gps_east_BASE`, `GL_BASE`, `TOC_BASE`, `instrumentation_comments_BASE`, `general_comments_BASE`, `as_built_completed_BASE`, `final_as_built_BASE`, `survey_requested_AS_BUILT`, `survey_completed_AS_BUILT`, `gps_north_AS_BUILT`, `gps_east_AS_BUILT`, `GL_AS_BUILT`, `TOC_AS_BUILT`, `instrumentation_comments_AS_BUILT`, `general_comments_AS_BUILT`, `as_built_completed_AS_BUILT`, `final_as_built_AS_BUILT`, `survey_requested_R1`, `survey_completed_R1`, `gps_north_R1`, `gps_east_R1`, `GL_R1`, `TOC_R1`, `instrumentation_comments_R1`, `general_comments_R1`, `as_built_completed_R1`, `final_as_built_R1`, `survey_requested_R2`, `survey_completed_R2`, `gps_north_R2`, `gps_east_R2`, `GL_R2`, `TOC_R2`, `instrumentation_comments_R2`, `general_comments_R2`, `as_built_completed_R2`, `final_as_built_R2`, `survey_requested_R3`, `survey_completed_R3`, `gps_north_R3`, `gps_east_R3`, `GL_R3`, `TOC_R3`, `instrumentation_comments_R3`, `general_comments_R3`, `as_built_completed_R3`, `final_as_built_R3`, `survey_requested_R4`, `survey_completed_R4`, `gps_north_R4`, `gps_east_R4`, `GL_R4`, `TOC_R4`, `instrumentation_comments_R4`, `general_comments_R4`, `as_built_completed_R4`, `final_as_built_R4` FROM `wells_construction` WHERE `well_id` = '{$well_id}'")->fields;
+		list($ready_roll_back, $approved_by_drilling, $designed_north, $designed_east, $rr, $flag_requested, $flagged, $survey_requested_BASE, $survey_completed_BASE, $gps_north_BASE, $gps_east_BASE, $GL_BASE, $TOC_BASE, $instrumentation_comments_BASE, $general_comments_BASE, $as_built_completed_BASE, $final_as_built_BASE, $survey_requested_AS_BUILT, $survey_completed_AS_BUILT, $gps_north_AS_BUILT, $gps_east_AS_BUILT, $GL_AS_BUILT, $TOC_AS_BUILT, $instrumentation_comments_AS_BUILT, $general_comments_AS_BUILT, $as_built_completed_AS_BUILT, $final_as_built_AS_BUILT, $survey_requested_R1, $survey_completed_R1, $gps_north_R1, $gps_east_R1, $GL_R1, $TOC_R1, $instrumentation_comments_R1, $general_comments_R1, $as_built_completed_R1, $final_as_built_R1, $survey_requested_R2, $survey_completed_R2, $gps_north_R2, $gps_east_R2, $GL_R2, $TOC_R2, $instrumentation_comments_R2, $general_comments_R2, $as_built_completed_R2, $final_as_built_R2, $survey_requested_R3, $survey_completed_R3, $gps_north_R3, $gps_east_R3, $GL_R3, $TOC_R3, $instrumentation_comments_R3, $general_comments_R3, $as_built_completed_R3, $final_as_built_R3, $survey_requested_R4, $survey_completed_R4, $gps_north_R4, $gps_east_R4, $GL_R4, $TOC_R4, $instrumentation_comments_R4, $general_comments_R4, $as_built_completed_R4, $final_as_built_R4) = $infosystem->Execute("SELECT `ready_roll_back`, `approved_by_drilling`, `designed_north`, `designed_east`, `rr`, `flag_requested`, `flagged`, `survey_requested_BASE`, `survey_completed_BASE`, `gps_north_BASE`, `gps_east_BASE`, `GL_BASE`, `TOC_BASE`, `instrumentation_comments_BASE`, `general_comments_BASE`, `as_built_completed_BASE`, `final_as_built_BASE`, `survey_requested_AS_BUILT`, `survey_completed_AS_BUILT`, `gps_north_AS_BUILT`, `gps_east_AS_BUILT`, `GL_AS_BUILT`, `TOC_AS_BUILT`, `instrumentation_comments_AS_BUILT`, `general_comments_AS_BUILT`, `as_built_completed_AS_BUILT`, `final_as_built_AS_BUILT`, `survey_requested_R1`, `survey_completed_R1`, `gps_north_R1`, `gps_east_R1`, `GL_R1`, `TOC_R1`, `instrumentation_comments_R1`, `general_comments_R1`, `as_built_completed_R1`, `final_as_built_R1`, `survey_requested_R2`, `survey_completed_R2`, `gps_north_R2`, `gps_east_R2`, `GL_R2`, `TOC_R2`, `instrumentation_comments_R2`, `general_comments_R2`, `as_built_completed_R2`, `final_as_built_R2`, `survey_requested_R3`, `survey_completed_R3`, `gps_north_R3`, `gps_east_R3`, `GL_R3`, `TOC_R3`, `instrumentation_comments_R3`, `general_comments_R3`, `as_built_completed_R3`, `final_as_built_R3`, `survey_requested_R4`, `survey_completed_R4`, `gps_north_R4`, `gps_east_R4`, `GL_R4`, `TOC_R4`, `instrumentation_comments_R4`, `general_comments_R4`, `as_built_completed_R4`, `final_as_built_R4` FROM `wells_construction` WHERE `well_id` = '{$well_id}'")->fields;
 	}
 }
 
-$dateFields = array('flagged', 'survey_requested_BASE', 'survey_requested_AS_BUILT', 'survey_requested_R1', 'survey_requested_R2', 'survey_requested_R3', 'survey_requested_R4');
+$dateFields = array('ready_roll_back', 'approved_by_drilling', 'flagged', 'survey_requested_BASE', 'survey_requested_AS_BUILT', 'survey_requested_R1', 'survey_requested_R2', 'survey_requested_R3', 'survey_requested_R4');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -46,9 +46,9 @@ $dateFields = array('flagged', 'survey_requested_BASE', 'survey_requested_AS_BUI
 			$( ".datepicker" ).datepicker();
 			$( ".datepicker" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 
-			$( ".datepicker" ).each(function() {
-				$(this).datepicker( "setDate", $(this).val() );
-			});
+//			$( ".datepicker" ).each(function() {
+//				$(this).datepicker( "setDate", $(this).val() );
+//			});
 			<?
 			foreach($dateFields as $val) {
 				if($$val != '0000-00-00') {
@@ -99,20 +99,53 @@ $dateFields = array('flagged', 'survey_requested_BASE', 'survey_requested_AS_BUI
 						</td>
 					</tr>
 					<tr>
-						<td>Flag Requested</td>
-						<td id="tdFlagRequested"><?= ($flag_requested != '0000-00-00') ? $flag_requested : "" ?></td>
+						<td>Construction Completed</td>
+						<td id="tdReady_for_drilling">&nbsp;</td>
 					</tr>
+
 					<tr>
-						<td>Flag Done</td>
-						<td id="tdFlagDone"><?= ($flagged != '0000-00-00') ? $flagged : "" ?></td>
+						<td>Rig Ready</td>
+						<td><input type="text" id="approved_by_drilling" class="datepicker" name="approved_by_drilling" value="<?= (isset($well_id)) ? $approved_by_drilling : "" ?>"></td>
 					</tr>
+
 					<tr>
-						<td>Designed North</td>
-						<td id="tdDesignedNorth"><?= $designed_north ?></td>
+						<td>Last Spud</td>
+						<td id="tdSpud">&nbsp;</td>
 					</tr>
+
 					<tr>
-						<td>Designed East</td>
-						<td id="tdDesignedEast"><?= $designed_east ?></td>
+						<td>Last RR</td>
+						<td id="tdRR">&nbsp;</td>
+					</tr>
+
+					<tr>
+						<td>Last Logged</td>
+						<td id="tdLogged">&nbsp;</td>
+					</tr>
+
+					<tr>
+						<td>No Abandonment Required</td>
+						<td id="tdNoAbandonmentRequired">&nbsp;</td>
+					</tr>
+
+					<tr>
+						<td>Permanent Installation</td>
+						<td id="tdPermanentInstallation">&nbsp;</td>
+					</tr>
+
+					<tr>
+						<td>Last Abandonment</td>
+						<td id="tdAbandonment">&nbsp;</td>
+					</tr>
+
+					<tr>
+						<td>Lease Release</td>
+						<td><input type="text" id="ready_roll_back" class="datepicker" name="ready_roll_back" value="<?= (isset($well_id)) ? $ready_roll_back : "" ?>"></td>
+					</tr>
+
+					<tr>
+						<td>Rolled Back</td>
+						<td id="tdRollBack">&nbsp;</td>
 					</tr>
 				</table>
 			</td>

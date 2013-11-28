@@ -4,7 +4,7 @@ include("db.php");
 
 $accessLead = ($_SESSION['levelid']==2)?true:false;
 
-list($DailySafety, $DailyInputs, $SupervisorsDaily, $ConDaily, $SurveyAccess, $DrillingGeotech, $ConPerWell, $ConstContr, $ConHydro, $ConVacuum, $ConWaterCross, $Water, $Vacuum, $WellConUpdate, $Report1, $Report2, $Report4, $Report5, $Report6, $Report7, $Report8, $Report9, $Report10, $Report11, $Report12, $Report) = $infosystem->Execute("SELECT `DailySafety`, `DailyInputs`, `SupervisorsDaily`, `ConDaily`, `SurveyAccess`, `DrillingGeotech`, `ConPerWell`, `ConstContr`, `ConHydro`, `ConVacuum`,`ConWaterCross`, `Water`, `Vacuum`, `WellConUpdate`, `Report1`, `Report2`, `Report4`, `Report5`, `Report6`, `Report7`, `Report8`, `Report9`, `Report10`, `Report11`, `Report12`, `Report` FROM `wm_company` WHERE `companyID` = ".$_SESSION['companyid'])->fields;
+list($DailySafety, $DailyInputs, $SupervisorsDaily, $DrillingGeotech, $ConDaily, $ConPerWell, $ConstContr, $ConHydro, $ConVacuum, $ConWaterCross, $Water, $Vacuum, $WellConUpdate, $DailyMudModule, $MudProducts, $SurveyModule, $RigMatLocation, $TempLogDeck, $Report1, $Report2, $Report4, $Report5, $Report6, $Report7, $Report8, $Report9, $Report10, $Report11, $Report12, $Report13, $Report14, $Report15, $Report16, $Report17, $Report18, $Report19, $Report20, $Report21, $Report) = $infosystem->Execute("SELECT `DailySafety`, `DailyInputs`, `SupervisorsDaily`, `DrillingGeotech`, `ConDaily`, `ConPerWell`, `ConstContr`, `ConHydro`, `ConVacuum`, `ConWaterCross`, `Water`, `Vacuum`, `WellConUpdate`, `DailyMudModule`, `MudProducts`, `SurveyModule`, `RigMatLocation`, `TempLogDeck`, `Report1`, `Report2`, `Report4`, `Report5`, `Report6`, `Report7`, `Report8`, `Report9`, `Report10`, `Report11`, `Report12`, `Report13`, `Report14`, `Report15`, `Report16`, `Report17`, `Report18`, `Report19`, `Report20`, `Report21`, `Report` FROM `wm_company` WHERE `companyID` = ".$_SESSION['companyid'])->fields;
 ?>
 <style>
 td {
@@ -46,7 +46,7 @@ td {
 					</tr>
 					<?
 					}
-					if($SurveyAccess!="d") { ?>
+					if($SurveyModule!="d") { ?>
 					<tr>
 						<td><a href="SurveyModule.php" target="_top">Survey Module</a></td>
 						<td>Input time from 00:00-23:45</td>
@@ -104,14 +104,14 @@ td {
 					}
 					if($Water!="d") { ?>
 					<tr>
-						<td><a href="Water.php" target="_top">Water</a></td>
+						<td><a href="WaterVacuum.php?resourceType=water" target="_top">Water</a></td>
 						<td>Input time from 00:00-23:45</td>
 					</tr>
 					<?
 					}
-					if($vacuum!="d") { ?>
+					if($Vacuum!="d") { ?>
 					<tr>
-						<td><a href="Vacuum.php" target="_top">Vacuum</a></td>
+						<td><a href="WaterVacuum.php?resourceType=vacuum" target="_top">Vacuum</a></td>
 						<td>Input time from 00:00-23:45</td>
 					</tr>
 					<?

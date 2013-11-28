@@ -20,6 +20,14 @@ if(isset($_POST['submit'])) {
 
 }
 
+// Report Creating
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'");
+while(!$rsArea->EOF) {
+	list($xArea) = $rsArea->fields;
+	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND (NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')");
+	$rsArea->MoveNext();
+}
+
 $rsConHydroVac = $infosystem->Execute("SELECT `area`, `cell_number`, `cell_licence`, `licence_effective_date`, `licence_expiry_date`, `cell_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -41,12 +49,18 @@ $rsConHydroVac = $infosystem->Execute("SELECT `area`, `cell_number`, `cell_licen
 			$i = 1;
 			while(!$rsConHydroVac->EOF) {
 				list($area, $cell_number, $cell_licence, $licence_effective_date, $licence_expiry_date, $cell_ID, $program_zone, $location_lsd, $start_date, $end_date, $volume) = $rsConHydroVac->fields;
-			?>
-			$( "#txtEffectiveDate<?= $i ?>").datepicker( "setDate", "<?= $licence_effective_date ?>" );
-			$( "#txtExpiryDate<?= $i ?>").datepicker( "setDate", "<?= $licence_expiry_date ?>" );
-			$( "#txtStartDate<?= $i ?>").datepicker( "setDate", "<?= $start_date ?>" );
-			$( "#txtEndDate<?= $i ?>").datepicker( "setDate", "<?= $end_date ?>" );
-			<?
+				if($licence_effective_date != '0000-00-00' && $licence_effective_date != '') { ?>
+				$( "#txtEffectiveDate<?= $i ?>").datepicker( "setDate", "<?= $licence_effective_date ?>" );
+				<? }
+				if($licence_expiry_date != '0000-00-00' && $licence_expiry_date != '') { ?>
+				$( "#txtExpiryDate<?= $i ?>").datepicker( "setDate", "<?= $licence_expiry_date ?>" );
+				<? }
+				if($start_date != '0000-00-00' && $start_date != '') { ?>
+				$( "#txtStartDate<?= $i ?>").datepicker( "setDate", "<?= $start_date ?>" );
+				<? }
+				if($end_date != '0000-00-00' && $end_date != '') { ?>
+				$( "#txtEndDate<?= $i ?>").datepicker( "setDate", "<?= $end_date ?>" );
+				<? }
 				$rsConHydroVac->MoveNext();
 				$i++;
 			}
@@ -67,6 +81,37 @@ $rsConHydroVac = $infosystem->Execute("SELECT `area`, `cell_number`, `cell_licen
 <? include ('header.inc');?>
 <form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?>?resourceType=<?= $resourceType ?>" method="post">
 	<input type="hidden" name="resourceType" value="<?= $resourceType ?>">
+	<?
+	foreach ($rsWaterVacuumReport as $key => $rs) {
+		if(!is_null($rs->Fields("cell_number"))) {
+	?>
+	<br>
+	<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
+		<tr>
+			<th colspan="2"><?= $key ?></th>
+		</tr>
+		<tr>
+			<th>Cell #</th>
+			<th>Volume</th>
+		</tr>
+		<?
+		while(!$rs->EOF) {
+			list($xCell, $xVolume) = $rs->fields;
+		?>
+		<tr>
+			<td><?= $xCell ?></td>
+			<td><?= number_format($xVolume, 2) ?></td>
+		</tr>
+		<?
+			$rs->MoveNext();
+		}
+		?>
+	</table>
+	<?
+		}
+	}
+	?>
+	<br>
 	<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
 		<tr>
 			<th>Area</th>
