@@ -4,23 +4,23 @@ include("db.php");
 include_once("adodb/toexport.inc.php");
 
 $resourceType = (isset($_GET['resourceType']) && $_GET['resourceType'] == 'vacuum') ? 'vacuum' : 'water';
+$report = (isset($_GET['resourceType']) && $_GET['resourceType'] == 'vacuum') ? 8 : 6;
 
 $todayShort = date("y-m-d", mktime());
 $today = date("Y-m-d", mktime());
 $dateOfReport = isset($_POST['txtDate'])?$_POST['txtDate']:$today;
-$infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Report 8', '{$_SESSION['username']}')");
+$infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Report {$report}', '{$_SESSION['username']}')");
 
 $rsReport = $infosystem->Execute("SELECT wv.`unit`, chv.`area`, chv.`cell_number`, wv.`volume` FROM `con_hydro_vac` chv, `water_vacuum` wv WHERE chv.`con_hydro_vac_id` = wv.`con_hydro_vac_id` AND `type` = '{$resourceType}' AND wv.`input_date` = '{$dateOfReport}' ORDER BY chv.`area`, chv.`cell_number`");
-$rsReportColumns = $infosystem->Execute("SELECT DISTINCT chv.`cell_number` FROM `con_hydro_vac` chv, `water_vacuum` wv WHERE chv.`con_hydro_vac_id` = wv.`con_hydro_vac_id` AND `type` = '{$resourceType}' AND wv.`input_date` = '{$dateOfReport}'");
+$rsReportColumns = $infosystem->Execute("SELECT DISTINCT chv.`cell_number` FROM `con_hydro_vac` chv, `water_vacuum` wv WHERE chv.`con_hydro_vac_id` = wv.`con_hydro_vac_id` AND `type` = '{$resourceType}' AND wv.`input_date` = '{$dateOfReport}' ORDER BY chv.`cell_number`");
 
-$report = array();
+// $report = array();
 while(!$rsReport->EOF) {
 	list($xUnit, $xArea, $xCellNumber, $xVolume) = $rsReport->fields;
 	$reportData[$xUnit][$xArea][$xCellNumber] += $xVolume;
 	$rsReport->MoveNext();
 }
 
-$report = 8;
 $reportURL = "reports/Report{$report}-{$todayShort}.csv";
 
 $fp = fopen("{$reportURL}", "w");

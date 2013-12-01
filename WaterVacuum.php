@@ -25,12 +25,11 @@ if(isset($_POST['submit'])) {
 }
 
 $rsWaterVacuum = $infosystem->Execute("SELECT `con_hydro_vac`.`con_hydro_vac_id`, `area`, `cell_number`,`input_date`, `unit`, `volume` FROM `con_hydro_vac`, `water_vacuum` WHERE `type` = '{$resourceType}' AND  `water_vacuum`.`con_hydro_vac_id` = `con_hydro_vac`.`con_hydro_vac_id` AND `input_date` = DATE(NOW())");
-$rsTrucks = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = '{$resourceType}'");
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') AND `type` = '{$resourceType}'");
-$rsCell = $infosystem->Execute("SELECT DISTINCT `cell_number` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+$rsTrucks = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = '{$resourceType}' ORDER BY `unit`");
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') AND `type` = '{$resourceType}' ORDER BY `area`");
+$rsCell = $infosystem->Execute("SELECT DISTINCT `cell_number` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') ORDER BY `cell_number`");
 
 // Report Creating
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 while(!$rsArea->EOF) {
 	list($xArea) = $rsArea->fields;
 	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, chv.`program_zone`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND ((NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')) AND DATE(wv.`input_date`) = DATE(NOW()) GROUP BY chv.`cell_number`");

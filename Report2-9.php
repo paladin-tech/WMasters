@@ -4,24 +4,25 @@ include("db.php");
 include_once("adodb/toexport.inc.php");
 
 $resourceType = (isset($_GET['resourceType']) && $_GET['resourceType'] == 'vacuum') ? 'vacuum' : 'water';
-$moduleLabels = array('water' => array('ModuleName' => 'Water', 'CellName' => 'Source'), 'vacuum' => array('ModuleName' => 'Vacuum', 'CellName' => 'Sump'));
+$report = (isset($_GET['resourceType']) && $_GET['resourceType'] == 'vacuum') ? 9 : 2;
+$moduleLabels = array('water' => array('LicenceName' => 'Water', 'CellName' => 'Source'), 'vacuum' => array('LicenceName' => 'Vacuum', 'CellName' => 'Sump'));
 
 $todayShort = date("y-m-d", mktime());
 $today = date("Y/m/d", mktime());
-$infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Report 2', '{$_SESSION['username']}')");
+$infosystem->Execute("INSERT INTO `tx_hist`(`FormName`, `user`) VALUES('Report {$report}', '{$_SESSION['username']}')");
 
-$rsReport = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro`");
+$rsReport = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro` ORDER BY `area`, `source_number`");
 
-$rsConHydro = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro` WHERE `water_licence` != ''");
+$rsConHydro = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro` ORDER BY `area`, `source_number`");
 
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'ORDER BY `area`");
+// $rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 while(!$rsArea->EOF) {
 	list($xArea) = $rsArea->fields;
-	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, chv.`cell_licence`, chv.`cell_ID`, chv.`program_zone`, chv.`location_LSD`, chv.`start_date`, chv.`end_date`, chv.`total_licensed_volume`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND (NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')");
+	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, chv.`cell_licence`, chv.`cell_ID`, chv.`program_zone`, chv.`location_LSD`, chv.`start_date`, chv.`end_date`, chv.`total_licensed_volume`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}'");
 	$rsArea->MoveNext();
 }
 
-$report = 2;
 $reportURL = "reports/Report{$report}-{$todayShort}.csv";
 
 $fp = fopen("{$reportURL}", "w");
@@ -51,8 +52,8 @@ if($fp) {
 				<tr>
 					<th>Area</th>
 					<th>Cell #</th>
-					<th>Water Licence #<br>(TDL)</th>
-					<th><?= $moduleLabels[$resourceType]['CellName'] ?></th>
+					<th><?= $moduleLabels[$resourceType]['LicenceName']?> Licence #<br>(TDL)</th>
+					<th><?= $moduleLabels[$resourceType]['CellName']?></th>
 					<th>Description</th>
 					<th>Location LSD</th>
 					<th>Start Date</th>

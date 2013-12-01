@@ -21,14 +21,14 @@ if(isset($_POST['submit'])) {
 }
 
 // Report Creating
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') ORDER BY `area`");
 while(!$rsArea->EOF) {
 	list($xArea) = $rsArea->fields;
-	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND (NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')");
+	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND (NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00') ORDER BY chv.`cell_number`");
 	$rsArea->MoveNext();
 }
 
-$rsConHydroVac = $infosystem->Execute("SELECT `area`, `cell_number`, `cell_licence`, `licence_effective_date`, `licence_expiry_date`, `cell_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'");
+$rsConHydroVac = $infosystem->Execute("SELECT `area`, `cell_number`, `cell_licence`, `licence_effective_date`, `licence_expiry_date`, `cell_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' ORDER BY `area`, `cell_number`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
