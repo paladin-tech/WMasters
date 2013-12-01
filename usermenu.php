@@ -164,7 +164,7 @@ td {
 					}
 					if($Report2!="d") { ?>
 					<tr>
-						<td><a href="Report2.php" target="_top">Report #2 - Water Usage Summary</a></td>
+						<td><a href="Report2-9.php?resourceType=water" target="_top">Report #2 - Water Usage Summary</a></td>
 						<td>Click to submit</td>
 					</tr>
 					<?
@@ -177,31 +177,31 @@ td {
 					}
 					if($Report5!="d") { ?>
 					<tr>
-						<td><a href="Report5.php" target="_top">Report #5 - Water Summary by Dates</a></td>
+						<td><a href="Report5-7.php?resourceType=water" target="_top">Report #5 - Water Summary by Dates</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}
 					if($Report6!="d") { ?>
 					<tr>
-						<td><a href="Report6.php" target="_top">Report #6 - Daily Water Summary</a></td>
+						<td><a href="Report6-8.php?resourceType=water" target="_top">Report #6 - Daily Water Summary</a></td>
 						<td>Enter the date in the form</td>
 					</tr><?
 					}
 					if($Report7!="d") { ?>
 					<tr>
-						<td><a href="Report7.php" target="_top">Report #7 - Sump Summary by Dates</a></td>
+						<td><a href="Report5-7.php?resourceType=vacuum" target="_top">Report #7 - Sump Summary by Dates</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}
 					if($Report8!="d") { ?>
 					<tr>
-						<td><a href="Report8.php" target="_top">Report #8 - Daily Sump Summary</a></td>
+						<td><a href="Report6-8.php?resourceType=vacuum" target="_top">Report #8 - Daily Sump Summary</a></td>
 						<td>Enter the date in the form</td>
 					</tr><?
 					}
 					if($Report9!="d") { ?>
 					<tr>
-						<td><a href="Report9.php" target="_top">Report #9 - Sump Usage Summary</a></td>
+						<td><a href="Report2-9.php?resourceType=vacuum" target="_top">Report #9 - Sump Usage Summary</a></td>
 						<td>Click to submit</td>
 					</tr><?
 					}

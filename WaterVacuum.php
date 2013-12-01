@@ -1,6 +1,7 @@
 <?
 include("sessionCheck.php");
 include("db.php");
+include("xajax_f.php");
 
 $resourceType = (isset($_GET['resourceType']) && $_GET['resourceType'] == 'vacuum') ? 'vacuum' : 'water';
 $moduleLabels = array('water' => array('ModuleName' => 'Water', 'CellName' => 'Source'), 'vacuum' => array('ModuleName' => 'Vacuum', 'CellName' => 'Sump'));
@@ -25,14 +26,14 @@ if(isset($_POST['submit'])) {
 
 $rsWaterVacuum = $infosystem->Execute("SELECT `con_hydro_vac`.`con_hydro_vac_id`, `area`, `cell_number`,`input_date`, `unit`, `volume` FROM `con_hydro_vac`, `water_vacuum` WHERE `type` = '{$resourceType}' AND  `water_vacuum`.`con_hydro_vac_id` = `con_hydro_vac`.`con_hydro_vac_id` AND `input_date` = DATE(NOW())");
 $rsTrucks = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = '{$resourceType}'");
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') AND `type` = '{$resourceType}'");
 $rsCell = $infosystem->Execute("SELECT DISTINCT `cell_number` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 
 // Report Creating
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'");
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 while(!$rsArea->EOF) {
 	list($xArea) = $rsArea->fields;
-	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`program_zone`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND (NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')");
+	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, chv.`program_zone`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND ((NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')) AND DATE(wv.`input_date`) = DATE(NOW()) GROUP BY chv.`cell_number`");
 	$rsArea->MoveNext();
 }
 ?>
@@ -45,6 +46,7 @@ while(!$rsArea->EOF) {
 	<link rel="stylesheet" href="css/jquery-ui.css">
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery-ui.js"></script>
+	<? $xajax->printJavascript(); ?>
 	<script type="text/javascript">
 		$(document).ready(function() {
 
@@ -86,7 +88,7 @@ while(!$rsArea->EOF) {
 			<td>
 				<?
 				foreach ($rsWaterVacuumReport as $key => $rs) {
-					if(!is_null($rs->Fields("cell_number"))) {
+//					if(!is_null($rs->Fields("cell_number"))) {
 						?>
 						<br>
 						<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
@@ -94,14 +96,16 @@ while(!$rsArea->EOF) {
 								<th colspan="2"><?= $key ?></th>
 							</tr>
 							<tr>
-								<th>Cell #</th>
+								<th><?= $moduleLabels[$resourceType]['CellName'] ?></th>
+								<th>Description</th>
 								<th>Volume</th>
 							</tr>
 							<?
 							while(!$rs->EOF) {
-								list($xCell, $xVolume) = $rs->fields;
+								list($xCellNumber, $xCell, $xVolume) = $rs->fields;
 								?>
 								<tr>
+									<td><?= $xCellNumber ?></td>
 									<td><?= $xCell ?></td>
 									<td><?= number_format($xVolume, 2) ?></td>
 								</tr>
@@ -112,7 +116,7 @@ while(!$rsArea->EOF) {
 						</table>
 						<br>
 					<?
-					}
+//					}
 				}
 				?>
 				<? if($errorMsg != "") echo "{$errorMsg}<br>"; ?>
@@ -154,7 +158,7 @@ while(!$rsArea->EOF) {
 							</select>
 						</td>
 						<td>
-							<select name="selArea">
+							<select name="selArea" onchange="xajax_getCells('<?= $resourceType ?>', '<?= $moduleLabels[$resourceType]['CellName'] ?>', this.value)">
 								<option value="">[Area]</option>
 								<?
 								$rsArea->MoveFirst();
@@ -168,7 +172,7 @@ while(!$rsArea->EOF) {
 								?>
 							</select>
 						</td>
-						<td>
+						<td id="cellTd">
 							<select name="selCell">
 								<option value="">[<?= $moduleLabels[$resourceType]['CellName'] ?>]</option>
 								<?

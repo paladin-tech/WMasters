@@ -10,6 +10,7 @@ $xajax->registerFunction("GetInfoConCrossWater");
 $xajax->registerFunction("GetUnitsForTruckType");
 $xajax->registerFunction("GetWellInfoSurvey");
 $xajax->registerFunction("GetWellInfoDrillingGeotech");
+$xajax->registerFunction("getCells");
 
 function GetWellInfoConAccess($well_id)
 {
@@ -643,6 +644,25 @@ function GetUnitsForTruckType($truckType)
 	$objResponse->assign("unit", "innerHTML", "{$html}");
 
     return $objResponse;
+}
+
+function getCells($type, $cellName, $area)
+{
+	global $infosystem;
+	$objResponse = new xajaxResponse();
+
+	$rsCell = $infosystem->Execute("SELECT `cell_number` FROM `con_hydro_vac` WHERE `type` = '{$type}' AND `area` = '{$area}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+	$html = "<select name=\"selCell\" id=\"selCell\"><option value=\"\">[{$cellName}]</option>";
+	while(!$rsCell->EOF) {
+		list($xCellNumber) = $rsCell->fields;
+		$html .= "<option value=\"{$xCellNumber}\">{$xCellNumber}</option>";
+		$rsCell->MoveNext();
+	}
+	$html .= "</select>";
+
+	$objResponse->assign("cellTd", "innerHTML", "{$html}");
+
+	return $objResponse;
 }
 
 $xajax->processRequest();

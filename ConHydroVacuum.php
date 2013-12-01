@@ -21,7 +21,7 @@ if(isset($_POST['submit'])) {
 }
 
 // Report Creating
-$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'");
+$rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 while(!$rsArea->EOF) {
 	list($xArea) = $rsArea->fields;
 	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' AND (NOW() BETWEEN chv.`start_date` AND chv.`end_date`) OR (NOW() > chv.`start_date` AND chv.`end_date` = '0000-00-00')");
