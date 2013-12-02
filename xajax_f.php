@@ -11,6 +11,7 @@ $xajax->registerFunction("GetUnitsForTruckType");
 $xajax->registerFunction("GetWellInfoSurvey");
 $xajax->registerFunction("GetWellInfoDrillingGeotech");
 $xajax->registerFunction("getCells");
+$xajax->registerFunction("getSumpCells");
 
 function GetWellInfoConAccess($well_id)
 {
@@ -651,7 +652,7 @@ function getCells($type, $cellName, $area)
 	global $infosystem;
 	$objResponse = new xajaxResponse();
 
-	$rsCell = $infosystem->Execute("SELECT `cell_number` FROM `con_hydro_vac` WHERE `type` = '{$type}' AND `area` = '{$area}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+	$rsCell = $infosystem->Execute("SELECT DISTINCT `cell_number` FROM `con_hydro_vac` WHERE `type` = '{$type}' AND `area` = '{$area}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 	$html = "<select name=\"selCell\" id=\"selCell\"><option value=\"\">[{$cellName}]</option>";
 	while(!$rsCell->EOF) {
 		list($xCellNumber) = $rsCell->fields;
@@ -661,6 +662,25 @@ function getCells($type, $cellName, $area)
 	$html .= "</select>";
 
 	$objResponse->assign("cellTd", "innerHTML", "{$html}");
+
+	return $objResponse;
+}
+
+function getSumpCells($nr, $area)
+{
+	global $infosystem;
+	$objResponse = new xajaxResponse();
+
+	$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE `area` = '{$area}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+	$html = "<select name=\"selCell\" id=\"selCell\"><option value=\"\">[Cell]</option>";
+	while(!$rsCell->EOF) {
+		list($xSumpNumber) = $rsCell->fields;
+		$html .= "<option value=\"{$xSumpNumber}\">{$xSumpNumber}</option>";
+		$rsCell->MoveNext();
+	}
+	$html .= "</select>";
+
+	$objResponse->assign("cellTd{$nr}", "innerHTML", "{$html}");
 
 	return $objResponse;
 }

@@ -288,3 +288,8 @@ A.cpTodayText { color:black; }
 input[readonly], input[readonly="readonly"] {
 	background: #CCCCCC;
 }
+
+.warning {
+	color: red;
+	font-weight: bold;
+}

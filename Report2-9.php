@@ -16,10 +16,18 @@ $rsReport = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence
 $rsConHydro = $infosystem->Execute("SELECT `area`, `source_number`, `water_licence`, `source_ID`, `program_zone`, `location_LSD`, `start_date`, `end_date`, `total_licensed_volume` FROM `con_hydro` ORDER BY `area`, `source_number`");
 
 $rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}'ORDER BY `area`");
-// $rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+
 while(!$rsArea->EOF) {
 	list($xArea) = $rsArea->fields;
-	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, chv.`cell_licence`, chv.`cell_ID`, chv.`program_zone`, chv.`location_LSD`, chv.`start_date`, chv.`end_date`, chv.`total_licensed_volume`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}'");
+	$rsWaterVacuumReport[$xArea] = $infosystem->Execute("SELECT chv.`cell_number`, chv.`cell_licence`, chv.`cell_ID`, chv.`program_zone`, chv.`location_LSD`, chv.`start_date`, chv.`end_date`, chv.`total_licensed_volume`, SUM(wv.`volume`) FROM `water_vacuum` wv, `con_hydro_vac` chv WHERE wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND chv.`type` = '{$resourceType}' AND chv.`area` = '{$xArea}' GROUP BY wv.`volume` ORDER BY chv.`cell_number`");
+
+	while(!$rsWaterVacuumReport[$xArea]->EOF) {
+		list($xCellNumber, $xCellLicence, $xCellID, $xProgramZone, $xLocationLSD, $xStartDate, $xEndDate, $xTotalLicensedVolume, $xVolume) = $rsWaterVacuumReport[$xArea]->fields;
+		$reportData[$xArea][$xCellNumber] = $rsWaterVacuumReport[$xArea]->fields;
+		$volumeData[$xArea][$xCellNumber] += $xVolume;
+		$rsWaterVacuumReport[$xArea]->MoveNext();
+	}
+
 	$rsArea->MoveNext();
 }
 
@@ -47,7 +55,9 @@ if($fp) {
 			<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
 				<?
 				$sumTotalLicensedVolume = $sumTotalUsedToDate = 0;
-				foreach ($rsWaterVacuumReport as $key => $rs) {
+				$rsArea->MoveFirst();
+				while(!$rsArea->EOF) {
+					list($yArea) = $rsArea->fields;
 				?>
 				<tr>
 					<th>Area</th>
@@ -62,29 +72,40 @@ if($fp) {
 					<th>Total Used<br>to Date (m3)</th>
 				</tr>
 				<?
-				while(!$rs->EOF) {
-					list($xCellNumber, $xCellLicence, $xCellID, $xProgramZone, $xLocationLSD, $xStartDate, $xEndDate, $xTotalLicensedVolume, $xVolume) = $rs->fields;
-					$sumTotalLicensedVolume += $xTotalLicensedVolume;
-					$sumTotalUsedToDate += $xVolume;
-					?>
+				if(sizeof($reportData[$yArea]) > 0) {
+				$i = 1;
+				foreach($reportData[$yArea] as $xCellNumber => $value) {
+					$sumTotalLicensedVolume += $reportData[$yArea][$xCellNumber]['total_licensed_volume'];
+					$sumTotalUsedToDate += $volumeData[$yArea][$xCellNumber];
+				?>
 					<tr>
-						<th rowspan="<?= $rs->RecordCount() ?>"><?= $key ?></th>
-						<td><?= $xCellNumber ?></td>
-						<td><?= $xCellLicence ?></td>
-						<td><?= $xCellID ?></td>
-						<td><?= $xProgramZone ?></td>
-						<td><?= $xLocationLSD ?></td>
-						<td><?= $xStartDate ?></td>
-						<td><?= $xEndDate ?></td>
-						<td align="right"><?= number_format($xTotalLicensedVolume, 2) ?></td>
-						<td align="right"><?= number_format($xVolume, 2) ?></td>
-					</tr>
-					<tr>
-						<td colspan="10">&nbsp;</td>
+						<?
+						if($i == 1) {
+						?>
+						<th rowspan="<?= sizeof($reportData[$yArea]) ?>"><?= $yArea ?></th>
+						<?
+						}
+						?>
+						<td><?= $reportData[$yArea][$xCellNumber]['cell_number'] ?></td>
+						<td><?= $reportData[$yArea][$xCellNumber]['cell_licence'] ?></td>
+						<td><?= $reportData[$yArea][$xCellNumber]['cell_ID'] ?></td>
+						<td><?= $reportData[$yArea][$xCellNumber]['program_zone'] ?></td>
+						<td><?= $reportData[$yArea][$xCellNumber]['location_LSD'] ?></td>
+						<td><?= $reportData[$yArea][$xCellNumber]['start_date'] ?></td>
+						<td><?= $reportData[$yArea][$xCellNumber]['end_date'] ?></td>
+						<td align="right"><?= number_format($reportData[$yArea][$xCellNumber]['total_licensed_volume'], 2) ?></td>
+						<td align="right"><?= number_format($volumeData[$yArea][$xCellNumber], 2) ?></td>
 					</tr>
 					<?
-					$rs->MoveNext();
+					$i++;
 				}
+				}
+				?>
+				<tr>
+					<td colspan="10">&nbsp;</td>
+				</tr>
+				<?
+					$rsArea->MoveNext();
 				}
 				?>
 				<tr>

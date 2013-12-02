@@ -222,28 +222,28 @@ if($fp) {
         <td>As Built GPS E</td>
         <td>EL</td>
         <td>GL</td>
-        <td>Well Sufix</td>
-        <td>Survey Request</td>
-        <td>As Built Date</td>
-        <td>As Built GPS N</td>
-        <td>As Built GPS E</td>
-        <td>EL</td>
-        <td>GL</td>
-        <td>Well Sufix</td>
-        <td>Survey Request</td>
-        <td>As Built Date</td>
-        <td>As Built GPS N</td>
-        <td>As Built GPS E</td>
-        <td>EL</td>
-        <td>GL</td>
-        <td>Other Description</td>
-        <td>Well Sufix</td>
-        <td>Survey Request</td>
-        <td>As Built Date</td>
-        <td>As Built GPS N</td>
-        <td>As Built GPS E</td>
-        <td>EL</td>
-        <td>GL</td>
+<!--        <td>Well Sufix</td>-->
+<!--        <td>Survey Request</td>-->
+<!--        <td>As Built Date</td>-->
+<!--        <td>As Built GPS N</td>-->
+<!--        <td>As Built GPS E</td>-->
+<!--        <td>EL</td>-->
+<!--        <td>GL</td>-->
+<!--        <td>Well Sufix</td>-->
+<!--        <td>Survey Request</td>-->
+<!--        <td>As Built Date</td>-->
+<!--        <td>As Built GPS N</td>-->
+<!--        <td>As Built GPS E</td>-->
+<!--        <td>EL</td>-->
+<!--        <td>GL</td>-->
+<!--        <td>Other Description</td>-->
+<!--        <td>Well Sufix</td>-->
+<!--        <td>Survey Request</td>-->
+<!--        <td>As Built Date</td>-->
+<!--        <td>As Built GPS N</td>-->
+<!--        <td>As Built GPS E</td>-->
+<!--        <td>EL</td>-->
+<!--        <td>GL</td>-->
         <td>Other Description</td>
         <td>MAINBOARD</td>
     </tr><?
@@ -437,28 +437,28 @@ if($fp) {
 		<td><?=($x_EL_D!="0.000")?$x_EL_D:""?></td>
 		<td><?=($x_GL_D!="0.000")?$x_GL_D:""?></td>
         <td>D</td>
-		<td><?=($x_need_as_built_O1!="0000-00-00")?$x_need_as_built_O1:""?></td>
-		<td><?=($x_date_O1!="0000-00-00")?$x_date_O1:""?></td>
-		<td><?=($x_gps_north_O1!="0")?$x_gps_north_O1:""?></td>
-		<td><?=($x_gps_east_O1!="0")?$x_gps_east_O1:""?></td>
-		<td><?=($x_EL_O1!="0.000")?$x_EL_O1:""?></td>
-		<td><?=($x_GL_O1!="0.000")?$x_GL_O1:""?></td>
-        <td>O1</td>
-		<td><?=($x_need_as_built_O2!="0000-00-00")?$x_need_as_built_O2:""?></td>
-		<td><?=($x_date_O2!="0000-00-00")?$x_date_O2:""?></td>
-		<td><?=($x_gps_north_O2!="0")?$x_gps_north_O2:""?></td>
-		<td><?=($x_gps_east_O2!="0")?$x_gps_east_O2:""?></td>
-		<td><?=($x_EL_O2!="0.000")?$x_EL_O2:""?></td>
-		<td><?=($x_GL_O2!="0.000")?$x_GL_O2:""?></td>
-        <td><?=$x_desc_O2?></td>
-        <td>O2</td>
-		<td><?=($x_need_as_built_O3!="0000-00-00")?$x_need_as_built_O3:""?></td>
-		<td><?=($x_date_O3!="0000-00-00")?$x_date_O3:""?></td>
-		<td><?=($x_gps_north_O3!="0")?$x_gps_north_O3:""?></td>
-		<td><?=($x_gps_east_O3!="0")?$x_gps_east_O3:""?></td>
-		<td><?=($x_EL_O3!="0.000")?$x_EL_O3:""?></td>
-		<td><?=($x_GL_O3!="0.000")?$x_GL_O3:""?></td>
-        <td><?=$x_desc_O3?></td>
+<!--		<td>--><?//=($x_need_as_built_O1!="0000-00-00")?$x_need_as_built_O1:""?><!--</td>-->
+<!--		<td>--><?//=($x_date_O1!="0000-00-00")?$x_date_O1:""?><!--</td>-->
+<!--		<td>--><?//=($x_gps_north_O1!="0")?$x_gps_north_O1:""?><!--</td>-->
+<!--		<td>--><?//=($x_gps_east_O1!="0")?$x_gps_east_O1:""?><!--</td>-->
+<!--		<td>--><?//=($x_EL_O1!="0.000")?$x_EL_O1:""?><!--</td>-->
+<!--		<td>--><?//=($x_GL_O1!="0.000")?$x_GL_O1:""?><!--</td>-->
+<!--        <td>O1</td>-->
+<!--		<td>--><?//=($x_need_as_built_O2!="0000-00-00")?$x_need_as_built_O2:""?><!--</td>-->
+<!--		<td>--><?//=($x_date_O2!="0000-00-00")?$x_date_O2:""?><!--</td>-->
+<!--		<td>--><?//=($x_gps_north_O2!="0")?$x_gps_north_O2:""?><!--</td>-->
+<!--		<td>--><?//=($x_gps_east_O2!="0")?$x_gps_east_O2:""?><!--</td>-->
+<!--		<td>--><?//=($x_EL_O2!="0.000")?$x_EL_O2:""?><!--</td>-->
+<!--		<td>--><?//=($x_GL_O2!="0.000")?$x_GL_O2:""?><!--</td>-->
+<!--        <td>--><?//=$x_desc_O2?><!--</td>-->
+<!--        <td>O2</td>-->
+<!--		<td>--><?//=($x_need_as_built_O3!="0000-00-00")?$x_need_as_built_O3:""?><!--</td>-->
+<!--		<td>--><?//=($x_date_O3!="0000-00-00")?$x_date_O3:""?><!--</td>-->
+<!--		<td>--><?//=($x_gps_north_O3!="0")?$x_gps_north_O3:""?><!--</td>-->
+<!--		<td>--><?//=($x_gps_east_O3!="0")?$x_gps_east_O3:""?><!--</td>-->
+<!--		<td>--><?//=($x_EL_O3!="0.000")?$x_EL_O3:""?><!--</td>-->
+<!--		<td>--><?//=($x_GL_O3!="0.000")?$x_GL_O3:""?><!--</td>-->
+<!--        <td>--><?//=$x_desc_O3?><!--</td>-->
         <td><?=$x_mainboard?></td>
      </tr><?
 	$rsReport->MoveNext();

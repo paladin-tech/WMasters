@@ -1,6 +1,7 @@
 <?
 include("sessionCheck.php");
 include("db.php");
+include("xajax_f.php");
 
 if(isset($_POST['submit'])) {
 	foreach($_POST['selWell'] as $key => $value) {
@@ -10,15 +11,15 @@ if(isset($_POST['submit'])) {
 		$dailyMudSump = $_POST['selSump'][$key];
 		$dailyMudCell = $_POST['selCell'][$key];
 		$dailyMudQuantity = $_POST['txtQuantity'][$key];
-		if($dailyMudHid == "" && $dailyMudWell != "") $infosystem->Execute("INSERT INTO `wm_dailymud` SET `truck_id` = '{$truckId}', `date` = '{$dateDaily}', `well_id` = '{$dailyMudWell}', `subwell_id` = '{$dailyMudSubWell}', `sump` = '{$dailyMudSump}', `cell` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity}");
-		if($dailyMudHid != "") $infosystem->Execute("UPDATE `wm_dailymud` SET `subwell_id` = '{$dailyMudSubWell}', `sump` = '{$dailyMudSump}', `cell` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity} WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}' AND `well_id` = '{$dailyMudWell}'");
+		if($dailyMudHid == "" && $dailyMudWell != "") $infosystem->Execute("INSERT INTO `wm_dailymud` SET `truck_id` = '{$truckId}', `date` = '{$dateDaily}', `well_id` = '{$dailyMudWell}', `sub_well_id` = '{$dailyMudSubWell}', `area` = '{$dailyMudSump}', `sump_number` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity}");
+		if($dailyMudHid != "") $infosystem->Execute("UPDATE `wm_dailymud` SET `sub_well_id` = '{$dailyMudSubWell}', `area` = '{$dailyMudSump}', `sump_number` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity} WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}' AND `well_id` = '{$dailyMudWell}'");
 	}
 }
 
 if(isset($_GET['truckId']) && isset($_GET['dateDaily'])) {
 	$truckId = $_GET['truckId'];
 	$dateDaily = $_GET['dateDaily'];
-	$rsDailyMud = $infosystem->Execute("SELECT `well_id`, `subwell_id`, `sump`, `cell`, `quantity` FROM `wm_dailymud` WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}'");
+	$rsDailyMud = $infosystem->Execute("SELECT `well_id`, `sub_well_id`, `area`, `sump_number`, `quantity` FROM `wm_dailymud` WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}'");
 	$wellsUsed = array();
 	while(!$rsDailyMud->EOF) {
 		array_push($wellsUsed, "'".$rsDailyMud->Fields("well_id")."'");
@@ -32,11 +33,9 @@ $rsTruck = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = 'Vac
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 $rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
 $rsSump = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_vacuum` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
-$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
-//$rsCell = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE `area` = $y_area AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+
 if($wellsUsed != '') $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` NOT IN (" . $wellsUsed . ") ORDER BY `mainboard`");
 else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
-//$rsSump = $infosystem->Execute("SELECT DISTINCT `sump_number` FROM `con_vacuum` WHERE NOW() BETWEEN `start_date` AND `end_date`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -47,6 +46,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 	<link rel="stylesheet" href="css/jquery-ui.css">
 	<script src="js/jquery.js"></script>
 	<script src="js/jquery-ui.js"></script>
+	<? $xajax->printJavascript(); ?>
 	<script type="text/javascript">
 		$(document).ready(function() {
 
@@ -112,6 +112,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 	</tr>
 	<?
 	if(isset($truckId) && isset($dateDaily)) {
+	$i = 1;
 	while(!$rsDailyMud->EOF) {
 		list($well_id, $subwell_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
 	?>
@@ -140,7 +141,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td>
-			<select name="selSump[]">
+			<select name="selSump[]" onchange="xajax_getSumpCells('<?= $i ?>', this.value)">
 				<option value="">[Sump]</option><?
 				$rsSump->MoveFirst();
 				while(!$rsSump->EOF) {
@@ -150,15 +151,10 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 				} ?>
 			</select>
 		</td>
-		<td>
+		<td id="cellTd<?= $i ?>">
 			<select name="selCell[]">
-				<option value="">[Cell]</option><?
-				$rsCell->MoveFirst();
-				while(!$rsCell->EOF) {
-					list($ySumpNumber) = $rsCell->fields; ?>
-					<option value="<?=$ySumpNumber?>"<?= (isset($truckId) && isset($dateDaily) && $cell == $ySumpNumber) ? " selected" : "" ?>><?=$ySumpNumber?></option><?
-					$rsCell->MoveNext();
-				} ?>
+				<option value="">[Cell]</option>
+				<option value="<?= $cell ?>" selected><?= $cell ?></option>
 			</select>
 		</td>
 		<td><input type="text" name="txtQuantity[]" value="<?= $quantity ?>" class="quantity"></td>
@@ -166,6 +162,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 	</tr>
 	<?
 		$rsDailyMud->MoveNext();
+		$i++;
 	}
 	}
 	?>
@@ -194,7 +191,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td>
-			<select name="selSump[]">
+			<select name="selSump[]" onchange="xajax_getSumpCells('0', this.value)">
 				<option value="">[Sump]</option><?
 				$rsSump->MoveFirst();
 				while(!$rsSump->EOF) {
@@ -204,15 +201,9 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 				} ?>
 			</select>
 		</td>
-		<td>
+		<td id="cellTd0">
 			<select name="selCell[]">
-				<option value="">[Cell]</option><?
-				$rsCell->MoveFirst();
-				while(!$rsCell->EOF) {
-					list($ySumpNumber) = $rsCell->fields; ?>
-					<option value="<?=$ySumpNumber?>"><?=$ySumpNumber?></option><?
-					$rsCell->MoveNext();
-				} ?>
+				<option value="">[Cell]</option>
 			</select>
 		</td>
 		<td><input type="text" name="txtQuantity[]" value="" class="quantity"></td>
