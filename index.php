@@ -10,10 +10,11 @@ if(isset($_POST['submit'])) {
 	foreach($_POST as $key => $value) $$key = $value;
 	$password = mysql_real_escape_string($password);
 	$encrypted_password=md5($password);
-	$check = $infosystem->Execute("SELECT wu.`username`, wu.`companyID`, wu.`levelID`, wc.`name` FROM `wm_users` wu, `wm_company` wc WHERE wu.`companyID` = wc.`companyID` AND wu.`username` = '{$username}' AND wu.`password` = '{$encrypted_password}'");
+	$check = $infosystem->Execute("SELECT wu.`ID`, wu.`username`, wu.`companyID`, wu.`levelID`, wc.`name` FROM `wm_users` wu, `wm_company` wc WHERE wu.`companyID` = wc.`companyID` AND wu.`username` = '{$username}' AND wu.`password` = '{$encrypted_password}'");
 	if($check->RecordCount()!=0) {
-		list($username, $companyID, $levelID, $name) = $check->fields;
+		list($ID, $username, $companyID, $levelID, $name) = $check->fields;
 		session_start();
+		$_SESSION['userID'] = $ID;
 		$_SESSION['username'] = $username;
 //		$_SESSION['password'] = $password;
 		$_SESSION['companyid'] = $companyID;

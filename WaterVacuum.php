@@ -5,26 +5,27 @@ include("xajax_f.php");
 
 $resourceType = (isset($_GET['resourceType']) && $_GET['resourceType'] == 'vacuum') ? 'vacuum' : 'water';
 $moduleLabels = array('water' => array('ModuleName' => 'Water', 'CellName' => 'Source'), 'vacuum' => array('ModuleName' => 'Vacuum', 'CellName' => 'Sump'));
+$dateWaterVacuum = (isset($_GET['dateWaterVacuum']) && strtotime($_GET['dateWaterVacuum']) !== false) ? $_GET['dateWaterVacuum'] : date('Y-m-d');
 
 $errorMsg = "";
+$today = date('Y-m-d');
 
 if(isset($_POST['submit'])) {
 
 	foreach($_POST as $key => $value) $$key = $value;
 
-	$inputDate = date('Y-m-d');
 	if($selUnit != "" && $selArea != "" && $selCell != "" && $txtVolume != "") {
 		$rsCheck = $infosystem->Execute("SELECT `con_hydro_vac_id` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND `area` = '{$selArea}' AND `cell_number` = {$selCell}");
 		if($rsCheck->RecordCount() > 0) {
 			list($conHydroVacId) = $rsCheck->fields;
-			$infosystem->Execute("INSERT INTO `water_vacuum` SET `con_hydro_vac_id` = {$conHydroVacId}, `input_date` = '{$inputDate}', `unit` = '{$selUnit}', `volume` = {$txtVolume}, `user` = '', `dateTimeStamp` = NOW()");
+			$infosystem->Execute("INSERT INTO `water_vacuum` SET `con_hydro_vac_id` = {$conHydroVacId}, `input_date` = '{$dateWaterVacuum}', `unit` = '{$selUnit}', `volume` = {$txtVolume}, `user` = {$userID}");
 		} else {
-			$errorMsg = "Save failed. No associated data for chosen Unit, Area and ".$moduleLabels[$resourceType]['CellName'].".";
+			$errorMsg = "Save failed. No associated data for chosen Unit, Area and " . $moduleLabels[$resourceType]['CellName'] . ".";
 		}
 	}
 }
 
-$rsWaterVacuum = $infosystem->Execute("SELECT `con_hydro_vac`.`con_hydro_vac_id`, `area`, `cell_number`,`input_date`, `unit`, `volume` FROM `con_hydro_vac`, `water_vacuum` WHERE `type` = '{$resourceType}' AND  `water_vacuum`.`con_hydro_vac_id` = `con_hydro_vac`.`con_hydro_vac_id` AND `input_date` = DATE(NOW())");
+$rsWaterVacuum = $infosystem->Execute("SELECT chv.`con_hydro_vac_id`, chv.`area`, chv.`cell_number`, wv.`input_date`, wv.`unit`, wv.`volume`, wv.`user`, wv.`dateTimeStamp` FROM `con_hydro_vac` chv, `water_vacuum` wv WHERE chv.`type` = '{$resourceType}' AND  wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND wv.`input_date` = '{$dateWaterVacuum}'");
 $rsTrucks = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = '{$resourceType}' ORDER BY `unit`");
 $rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') AND `type` = '{$resourceType}' ORDER BY `area`");
 $rsCell = $infosystem->Execute("SELECT DISTINCT `cell_number` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') ORDER BY `cell_number`");
@@ -52,18 +53,17 @@ while(!$rsArea->EOF) {
 			$( ".datepicker" ).datepicker();
 			$( ".datepicker" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
 
-			$( ".selectDailyMud").change(function() {
-				if( $("#selTruck").val() != "" && $("#txtDate").val() != "") {
-					window.location.href = '<?= $_SERVER["PHP_SELF"] ?>?truckId=' + $("#selTruck").val() + '&dateDaily=' + $("#txtDate").val();
-				}
-			});
 			<?
-			if((isset($truckId) && isset($dateDaily))) {
+			if(isset($dateWaterVacuum)) {
 			?>
-			$( "#txtDate").datepicker( "setDate", "<?= $dateDaily ?>" );
+			$( "#txtDate").datepicker( "setDate", "<?= $dateWaterVacuum ?>" );
 			<?
 			}
 			?>
+
+			$("#txtDate").change(function() {
+				window.location.href = '<?= $_SERVER["PHP_SELF"] ?>?resourceType=<?=$resourceType?>&dateWaterVacuum=' + $(this).val();
+			});
 
 			$('#frm').submit(function(event) {
 				$('.quantity').each(function() {
@@ -79,10 +79,20 @@ while(!$rsArea->EOF) {
 
 <body>
 <? include ('header.inc');?>
-<form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?>?resourceType=<?= $resourceType ?>" method="post">
-	<input type="hidden" name="truckId" value="<?= (isset($truckId)) ? $truckId : "" ?>">
-	<input type="hidden" name="dateDaily" value="<?= (isset($dateDaily)) ? $dateDaily : "" ?>">
+<form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?>?resourceType=<?=$resourceType?>&dateWaterVacuum=<?= $dateWaterVacuum ?>" method="post">
 	<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
+		<tr>
+			<td colspan="2">Ticket Date:<br><input type="text" class="datepicker selectWaterVacuumDate" name="txtDate" id="txtDate" value="<?= (isset($dateWaterVacuum)) ? $dateWaterVacuum : "" ?>"></td>
+		</tr>
+		<?
+		if($dateWaterVacuum > $today) {
+		?>
+		<tr>
+			<td class="warning">You cannot change the data in the future.</td>
+		</tr>
+		<?
+		} else {
+		?>
 		<tr>
 			<td>
 				<?
@@ -128,7 +138,8 @@ while(!$rsArea->EOF) {
 					</tr>
 					<?
 					while(!$rsWaterVacuum->EOF) {
-						list($con_hydro_vac_id, $area, $cell_number, $input_date, $unit, $volume) = $rsWaterVacuum->fields;
+						list($con_hydro_vac_id, $area, $cell_number, $input_date, $unit, $volume, $user, $dateTimeStamp) = $rsWaterVacuum->fields;
+						$locked = ($dateTimeStamp != date('Y-m-d'));
 					?>
 					<tr>
 						<td><?= $unit ?></td>
@@ -203,6 +214,9 @@ while(!$rsArea->EOF) {
 			</td>
 			<td width="100%">&nbsp;</td>
 		</tr>
+		<?
+		}
+		?>
 	</table>
 </form>
 <? include ('footer.inc'); ?>

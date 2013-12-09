@@ -2,7 +2,7 @@
 include("sessionCheck.php");
 include("db.php");
 
-$rsDailyMud = $infosystem->Execute("SELECT `truck_id`, `date`, `well_id`, `subwell_id`, `sump`, `cell`, `quantity` FROM `wm_dailymud` ORDER BY `date`, `truck_id`, `well_id`");
+$rsDailyMud = $infosystem->Execute("SELECT `truck_id`, `date`, `well_id`, `sub_well_id`, `area`, `sump_number`, `quantity` FROM `wm_dailymud` ORDER BY `date`, `truck_id`, `well_id`");
 $rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,14 +29,14 @@ $rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
 			$rsSubWell->MoveNext();
 		}
 		?>
+		<td>Area</td>
 		<td>Sump</td>
-		<td>Cell</td>
 		<td>Quantity</td>
 		<td width="100%"></td>
 	</tr>
 	<?
 	while(!$rsDailyMud->EOF) {
-		list($truck_id, $date, $well_id, $subwell_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
+		list($truck_id, $date, $well_id, $sub_well_id, $area, $sump_number, $quantity) = $rsDailyMud->fields;
 	?>
 	<tr>
 		<td nowrap><?= $date ?></td>
@@ -47,13 +47,13 @@ $rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
 		while(!$rsSubWell->EOF) {
 			list($xSubWell) = $rsSubWell->fields;
 		?>
-		<td align="center"><?= ($subwell_id == $xSubWell) ? "x" : "" ?></td>
+		<td align="center"><?= ($sub_well_id == $xSubWell) ? "x" : "" ?></td>
 			<?
 			$rsSubWell->MoveNext();
 		}
 		?>
-		<td nowrap><?= $sump ?></td>
-		<td align="center" nowrap><?= $cell ?></td>
+		<td nowrap><?= $area ?></td>
+		<td align="center" nowrap><?= $sump_number ?></td>
 		<td nowrap><?= $quantity ?></td>
 		<td width="100%"></td>
 	</tr><?

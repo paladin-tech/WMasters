@@ -284,6 +284,18 @@ td {
 						<td>Click to submit</td>
 					</tr><?
 					}
+					if($Report19!="d") { ?>
+					<tr>
+						<td><a href="Report19-Bertram.php" target="_top">Report #19 - Total Material Left In Yard</a></td>
+						<td>Click to submit</td>
+					</tr><?
+					}
+					if($Report19!="d") { ?>
+					<tr>
+						<td><a href="Report20-Bertram.php" target="_top">Report #20 - Total Used Material By Dates</a></td>
+						<td>Click to submit</td>
+					</tr><?
+					}
 					?>
 				</table>
 			</td>

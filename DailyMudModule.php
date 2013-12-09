@@ -11,7 +11,7 @@ if(isset($_POST['submit'])) {
 		$dailyMudSump = $_POST['selSump'][$key];
 		$dailyMudCell = $_POST['selCell'][$key];
 		$dailyMudQuantity = $_POST['txtQuantity'][$key];
-		if($dailyMudHid == "" && $dailyMudWell != "") $infosystem->Execute("INSERT INTO `wm_dailymud` SET `truck_id` = '{$truckId}', `date` = '{$dateDaily}', `well_id` = '{$dailyMudWell}', `sub_well_id` = '{$dailyMudSubWell}', `area` = '{$dailyMudSump}', `sump_number` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity}");
+		if($dailyMudHid == "" && $dailyMudWell != "" && $dailyMudSubWell != "" && $dailyMudSump != "" && $dailyMudCell != "" && $dailyMudQuantity != "") $infosystem->Execute("INSERT INTO `wm_dailymud` SET `truck_id` = '{$truckId}', `date` = '{$dateDaily}', `well_id` = '{$dailyMudWell}', `sub_well_id` = '{$dailyMudSubWell}', `area` = '{$dailyMudSump}', `sump_number` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity}");
 		if($dailyMudHid != "") $infosystem->Execute("UPDATE `wm_dailymud` SET `sub_well_id` = '{$dailyMudSubWell}', `area` = '{$dailyMudSump}', `sump_number` = {$dailyMudCell}, `quantity` = {$dailyMudQuantity} WHERE `truck_id` = '{$truckId}' AND `date` = '{$dateDaily}' AND `well_id` = '{$dailyMudWell}'");
 	}
 }
@@ -32,7 +32,7 @@ if(isset($_GET['truckId']) && isset($_GET['dateDaily'])) {
 $rsTruck = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = 'Vacuum'");
 $rsWellLicence = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
 $rsSubWell = $infosystem->Execute("SELECT `wellId` FROM `sub_wells`");
-$rsSump = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_vacuum` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
+$rsSump = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE `type` = 'vacuum' AND (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00')");
 
 if($wellsUsed != '') $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` WHERE `well_id` NOT IN (" . $wellsUsed . ") ORDER BY `mainboard`");
 else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_construction` ORDER BY `mainboard`");
@@ -61,19 +61,29 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			<?
 			if((isset($truckId) && isset($dateDaily))) {
 			?>
-			$( "#txtDate").datepicker( "setDate", "<?= $dateDaily ?>" );
+			$("#txtDate").datepicker( "setDate", "<?= $dateDaily ?>" );
 			<?
 			}
 			?>
 
-			$('#frm').submit(function(event) {
-				$('.quantity').each(function() {
-					if(($(this).val() != '' && !($.isNumeric($(this).val()))) || $(this).val() <= 0) {
-						alert('Quantity must be a numeric value greater than zero!');
-						event.preventDefault();
-					}
-				});
-			});
+//			$('#frm').submit(function(event) {
+//				$('.newData').each(function() {
+//					if($(this).val() == '') {
+//						alert('You have to enter the data!');
+//						event.preventDefault();
+//						error = true;
+//						return false;
+//					}
+//				});
+//				if(!error) {
+//					$('.quantity').each(function() {
+//						if(($(this).val() != '' && !($.isNumeric($(this).val()))) || $(this).val() <= 0) {
+//							alert('Quantity must be a numeric value greater than zero!');
+//							event.preventDefault();
+//						}
+//					});
+//				}
+//			});
 		});
 	</script>
 </head>
@@ -114,12 +124,12 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 	if(isset($truckId) && isset($dateDaily)) {
 	$i = 1;
 	while(!$rsDailyMud->EOF) {
-		list($well_id, $subwell_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
+		list($well_id, $sub_well_id, $sump, $cell, $quantity) = $rsDailyMud->fields;
 	?>
 	<tr>
 		<input type="hidden" name="hidDaily[]" value="1">
 		<td>
-			<select name="selWell[]">
+			<select name="selWell[]" class="newData">
 				<option value="">[Well ID]</option><?
 				$rsWellLicence->MoveFirst();
 				while(!$rsWellLicence->EOF) {
@@ -130,18 +140,18 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td>
-			<select name="selSubWell[]">
+			<select name="selSubWell[]" class="newData">
 				<option value="">[SubWell ID]</option><?
 				$rsSubWell->MoveFirst();
 				while(!$rsSubWell->EOF) {
 					list($ySubWellId) = $rsSubWell->fields; ?>
-					<option value="<?=$ySubWellId?>"<?= (isset($truckId) && isset($dateDaily) && $subwell_id == $ySubWellId) ? " selected" : "" ?>><?=$ySubWellId?></option><?
+					<option value="<?=$ySubWellId?>"<?= (isset($truckId) && isset($dateDaily) && $sub_well_id == $ySubWellId) ? " selected" : "" ?>><?=$ySubWellId?></option><?
 					$rsSubWell->MoveNext();
 				} ?>
 			</select>
 		</td>
 		<td>
-			<select name="selSump[]" onchange="xajax_getSumpCells('<?= $i ?>', this.value)">
+			<select name="selSump[]" class="newData" onchange="xajax_getSumpCells('<?= $i ?>', this.value)">
 				<option value="">[Sump]</option><?
 				$rsSump->MoveFirst();
 				while(!$rsSump->EOF) {
@@ -152,7 +162,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td id="cellTd<?= $i ?>">
-			<select name="selCell[]">
+			<select name="selCell[]" class="newData">
 				<option value="">[Cell]</option>
 				<option value="<?= $cell ?>" selected><?= $cell ?></option>
 			</select>
@@ -169,7 +179,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 	<tr>
 		<input type="hidden" name="hidDaily[]" value="">
 		<td>
-			<select name="selWell[]">
+			<select name="selWell[]" class="newData">
 				<option value="">[Well ID]</option><?
 				$rsWellLicence->MoveFirst();
 				while(!$rsWellLicence->EOF) {
@@ -180,7 +190,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td>
-			<select name="selSubWell[]">
+			<select name="selSubWell[]" class="newData">
 				<option value="">[SubWell ID]</option><?
 				$rsSubWell->MoveFirst();
 				while(!$rsSubWell->EOF) {
@@ -191,7 +201,7 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td>
-			<select name="selSump[]" onchange="xajax_getSumpCells('0', this.value)">
+			<select name="selSump[]" class="newData" onchange="xajax_getSumpCells('0', this.value)">
 				<option value="">[Sump]</option><?
 				$rsSump->MoveFirst();
 				while(!$rsSump->EOF) {
@@ -202,11 +212,11 @@ else $rsWellLicenceNew = $infosystem->Execute("SELECT `well_id` FROM `wells_cons
 			</select>
 		</td>
 		<td id="cellTd0">
-			<select name="selCell[]">
+			<select name="selCell[]" class="newData">
 				<option value="">[Cell]</option>
 			</select>
 		</td>
-		<td><input type="text" name="txtQuantity[]" value="" class="quantity"></td>
+		<td><input type="text" name="txtQuantity[]" id="txtQuantity" value="" class="newData quantity"></td>
 		<td width="100%">&nbsp;</td>
 	</tr>
 	<tr>

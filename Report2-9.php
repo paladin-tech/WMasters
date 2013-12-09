@@ -70,13 +70,17 @@ if($fp) {
 					<th>End Date</th>
 					<th>Total Licenced<br>Volume (m3)</th>
 					<th>Total Used<br>to Date (m3)</th>
+					<th>Amount<br>Left (m3)</th>
 				</tr>
 				<?
 				if(sizeof($reportData[$yArea]) > 0) {
 				$i = 1;
+				$warning = false;
 				foreach($reportData[$yArea] as $xCellNumber => $value) {
 					$sumTotalLicensedVolume += $reportData[$yArea][$xCellNumber]['total_licensed_volume'];
 					$sumTotalUsedToDate += $volumeData[$yArea][$xCellNumber];
+					$amountLeft = $reportData[$yArea][$xCellNumber]['total_licensed_volume'] - $volumeData[$yArea][$xCellNumber];
+					if($amountLeft <= 200) $warning = true;
 				?>
 					<tr>
 						<?
@@ -95,6 +99,7 @@ if($fp) {
 						<td><?= $reportData[$yArea][$xCellNumber]['end_date'] ?></td>
 						<td align="right"><?= number_format($reportData[$yArea][$xCellNumber]['total_licensed_volume'], 2) ?></td>
 						<td align="right"><?= number_format($volumeData[$yArea][$xCellNumber], 2) ?></td>
+						<td align="right"<? if($amountLeft <= 200) { ?> class="warning"<? } ?>><?= number_format($amountLeft, 2) ?></td>
 					</tr>
 					<?
 					$i++;
@@ -102,7 +107,11 @@ if($fp) {
 				}
 				?>
 				<tr>
-					<td colspan="10">&nbsp;</td>
+					<? if($warning) { ?>
+					<td colspan="11" align="center" class="warning">Warning: 200m3 limit is reached, please advise supervisor.</td>
+					<? } else { ?>
+					<td colspan="11">&nbsp;</td>
+					<? } ?>
 				</tr>
 				<?
 					$rsArea->MoveNext();
@@ -112,6 +121,7 @@ if($fp) {
 					<th colspan="8" align="right">Total All Sources:</th>
 					<th align="right"><?= number_format($sumTotalLicensedVolume, 2) ?></th>
 					<th align="right"><?= number_format($sumTotalUsedToDate, 2) ?></th>
+					<th align="right"><?= number_format(($sumTotalLicensedVolume - $sumTotalUsedToDate), 2) ?></th>
 				</tr>
 			</table>
 		</td>
