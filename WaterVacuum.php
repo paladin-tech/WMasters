@@ -18,14 +18,14 @@ if(isset($_POST['submit'])) {
 		$rsCheck = $infosystem->Execute("SELECT `con_hydro_vac_id` FROM `con_hydro_vac` WHERE `type` = '{$resourceType}' AND `area` = '{$selArea}' AND `cell_number` = {$selCell}");
 		if($rsCheck->RecordCount() > 0) {
 			list($conHydroVacId) = $rsCheck->fields;
-			$infosystem->Execute("INSERT INTO `water_vacuum` SET `con_hydro_vac_id` = {$conHydroVacId}, `input_date` = '{$dateWaterVacuum}', `unit` = '{$selUnit}', `volume` = {$txtVolume}, `user` = {$userID}");
+			$infosystem->Execute("INSERT INTO `water_vacuum` SET `con_hydro_vac_id` = {$conHydroVacId}, `input_date` = '{$txtDate}', `unit` = '{$selUnit}', `volume` = {$txtVolume}, `user` = {$userID}");
 		} else {
 			$errorMsg = "Save failed. No associated data for chosen Unit, Area and " . $moduleLabels[$resourceType]['CellName'] . ".";
 		}
 	}
 }
 
-$rsWaterVacuum = $infosystem->Execute("SELECT chv.`con_hydro_vac_id`, chv.`area`, chv.`cell_number`, wv.`input_date`, wv.`unit`, wv.`volume`, wv.`user`, wv.`dateTimeStamp` FROM `con_hydro_vac` chv, `water_vacuum` wv WHERE chv.`type` = '{$resourceType}' AND  wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND wv.`input_date` = '{$dateWaterVacuum}'");
+$rsWaterVacuum = $infosystem->Execute("SELECT chv.`con_hydro_vac_id`, chv.`area`, chv.`cell_number`, wv.`input_date`, wv.`unit`, wv.`volume`, wv.`user`, wv.`dateTimeStamp` FROM `con_hydro_vac` chv, `water_vacuum` wv WHERE chv.`type` = '{$resourceType}' AND  wv.`con_hydro_vac_id` = chv.`con_hydro_vac_id` AND DATE(wv.`dateTimeStamp`) = DATE(NOW())");
 $rsTrucks = $infosystem->Execute("SELECT `unit` FROM `trucks` WHERE `type` = '{$resourceType}' ORDER BY `unit`");
 $rsArea = $infosystem->Execute("SELECT DISTINCT `area` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') AND `type` = '{$resourceType}' ORDER BY `area`");
 $rsCell = $infosystem->Execute("SELECT DISTINCT `cell_number` FROM `con_hydro_vac` WHERE (NOW() BETWEEN `start_date` AND `end_date`) OR (NOW() > `start_date` AND `end_date` = '0000-00-00') ORDER BY `cell_number`");
@@ -61,10 +61,6 @@ while(!$rsArea->EOF) {
 			}
 			?>
 
-			$("#txtDate").change(function() {
-				window.location.href = '<?= $_SERVER["PHP_SELF"] ?>?resourceType=<?=$resourceType?>&dateWaterVacuum=' + $(this).val();
-			});
-
 			$('#frm').submit(function(event) {
 				$('.quantity').each(function() {
 					if(($(this).val() != '' && !($.isNumeric($(this).val()))) || $(this).val() <= 0) {
@@ -79,11 +75,11 @@ while(!$rsArea->EOF) {
 
 <body>
 <? include ('header.inc');?>
-<form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?>?resourceType=<?=$resourceType?>&dateWaterVacuum=<?= $dateWaterVacuum ?>" method="post">
+<form name="frm" id="frm" action="<?=$_SERVER['PHP_SELF']?>?resourceType=<?=$resourceType?>" method="post">
 	<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
-		<tr>
-			<td colspan="2">Ticket Date:<br><input type="text" class="datepicker selectWaterVacuumDate" name="txtDate" id="txtDate" value="<?= (isset($dateWaterVacuum)) ? $dateWaterVacuum : "" ?>"></td>
-		</tr>
+<!--		<tr>-->
+<!--			<td colspan="2">Ticket Date:<br><input type="text" class="datepicker selectWaterVacuumDate" name="txtDate" id="txtDate" value="--><?//= (isset($dateWaterVacuum)) ? $dateWaterVacuum : "" ?><!--"></td>-->
+<!--		</tr>-->
 		<?
 		if($dateWaterVacuum > $today) {
 		?>
@@ -131,6 +127,7 @@ while(!$rsArea->EOF) {
 				<? if($errorMsg != "") echo "{$errorMsg}<br>"; ?>
 				<table cellspacing="1" cellpadding="3" bgcolor="#CCCCCC">
 					<tr>
+						<th>Ticket Date</th>
 						<th>Unit</th>
 						<th>Area</th>
 						<th><?= $moduleLabels[$resourceType]['CellName'] ?></th>
@@ -142,6 +139,7 @@ while(!$rsArea->EOF) {
 						$locked = ($dateTimeStamp != date('Y-m-d'));
 					?>
 					<tr>
+						<td><?= $input_date ?></td>
 						<td><?= $unit ?></td>
 						<td><?= $area ?></td>
 						<td><?= $cell_number ?></td>
@@ -152,6 +150,7 @@ while(!$rsArea->EOF) {
 					}
 					?>
 					<tr>
+						<td><input type="text" class="datepicker selectWaterVacuumDate" name="txtDate" id="txtDate" value=""></td>
 						<td>
 							<select name="selUnit">
 								<option value="">[Unit ID]</option>
