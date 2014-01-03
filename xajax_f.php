@@ -12,6 +12,7 @@ $xajax->registerFunction("GetWellInfoSurvey");
 $xajax->registerFunction("GetWellInfoDrillingGeotech");
 $xajax->registerFunction("getCells");
 $xajax->registerFunction("getSumpCells");
+$xajax->registerFunction("getWasteType");
 
 function GetWellInfoConAccess($well_id)
 {
@@ -681,6 +682,25 @@ function getSumpCells($nr, $area)
 	$html .= "</select>";
 
 	$objResponse->assign("cellTd{$nr}", "innerHTML", "{$html}");
+
+	return $objResponse;
+}
+
+function getWasteType($wasteCategoryId)
+{
+	global $infosystem;
+	$objResponse = new xajaxResponse();
+
+	$rsWasteType = $infosystem->Execute("SELECT `wasteTypeId`, `wasteType` FROM `wm_waste_type` WHERE `wasteCategoryId` = {$wasteCategoryId}");
+	$html = "<select name=\"selWasteType\" id=\"selWasteType\" class=\"newData\"><option value=\"\">[Type]</option>";
+	while(!$rsWasteType->EOF) {
+		list($xWasteTypeId, $xWasteType) = $rsWasteType->fields;
+		$html .= "<option value=\"{$xWasteTypeId}\">{$xWasteType}</option>";
+		$rsWasteType->MoveNext();
+	}
+	$html .= "</select>";
+
+	$objResponse->assign("tdWasteType", "innerHTML", "{$html}");
 
 	return $objResponse;
 }

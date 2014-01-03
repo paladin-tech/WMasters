@@ -150,6 +150,12 @@ td {
 						<td>Select csv file for upload</td>
 					</tr><?
 					}
+					if($WellConUpdate!="d") { ?>
+						<tr>
+							<td><a href="WasteModule.php" target="_top">Waste Module</a></td>
+							<td>Input time from 00:00-23:45</td>
+						</tr><?
+					}
 					?>
 				</table>
 			</td>
@@ -295,6 +301,18 @@ td {
 						<td><a href="Report20-Bertram.php" target="_top">Report #20 - Total Used Material By Dates</a></td>
 						<td>Click to submit</td>
 					</tr><?
+					}
+					if($Report19!="d") { ?>
+						<tr>
+							<td><a href="Report1-Waste.php" target="_top">Waste Report #1 - Material Removed from Site (by Material)</a></td>
+							<td>Click to submit</td>
+						</tr><?
+					}
+					if($Report19!="d") { ?>
+						<tr>
+							<td><a href="Report2-Waste.php" target="_top">Waste Report #2 - Material Removed from Site by Date</a></td>
+							<td>Click to submit</td>
+						</tr><?
 					}
 					?>
 				</table>
